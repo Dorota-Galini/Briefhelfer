@@ -1,0 +1,120 @@
+---
+// Datenschutzerklärung der öffentlichen Demo (MODUS "demo").
+// Aufbau und Hosting-Abschnitt nach dem Vorbild von galini-studio.de/datenschutz (dort Quelle: e-recht24).
+// Von Claude formuliert und nicht anwaltlich geprüft. Der Hinweis darauf erscheint nur in der Entwicklung.
+import Recht from '../layouts/Recht.astro';
+import { adresse, betrieb, kontakt, marke, MODUS } from '../config';
+const entwicklung = import.meta.env.DEV;
+---
+<Recht titel="Datenschutzerklärung">
+  {entwicklung && (
+    <p class="hinweis">
+      Nur in der Entwicklung sichtbar: Dieser Text ist ein Entwurf, von Claude nach dem Vorbild der Datenschutzerklärung
+      auf galini-studio.de formuliert und nicht anwaltlich geprüft.
+    </p>
+  )}
+  {MODUS === 'voll' && (
+    <p class="hinweis">
+      Diese Datenschutzerklärung beschreibt die öffentliche Demo von {marke.name}. Wer den Briefhelfer selbst betreibt
+      und echte Briefe verarbeitet, braucht eine eigene, die den eigenen Server und den eigenen KI-Zugang beschreibt.
+    </p>
+  )}
+
+  <p class="leise">Stand: {betrieb.stand}</p>
+
+  <h2>1. Kurz gesagt</h2>
+  <p>
+    Diese Demo arbeitet nur mit erfundenen Beispielbriefen. Eigene Briefe können Sie hier nicht hochladen. Gelesen,
+    geschwärzt und angezeigt wird alles in Ihrem Browser. Es wird nichts an eine KI gesendet: Die Erklärungen hat Claude,
+    die KI von Anthropic, vorher aus den erfundenen Briefen erzeugt. Was Sie in das Beispielformular eintragen, verlässt
+    Ihr Gerät nicht.
+  </p>
+  <p>
+    Bei mir kommt nur an, was Sie mir freiwillig über das Feedback-Formular schicken. Dazu kommen die üblichen
+    Zugriffsdaten beim Hoster, wie bei jeder Website.
+  </p>
+
+  <h2>2. Verantwortlich</h2>
+  <p>
+    {marke.inhaberin}<br />
+    {marke.name}<br />
+    {adresse.strasse}<br />
+    {adresse.plz} {adresse.ort}<br />
+    Telefon: {kontakt.telefonAnzeige}<br />
+    E-Mail: <a href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+  </p>
+
+  <h2>3. Hosting</h2>
+  <p>
+    Die Seite liegt bei {betrieb.hoster} (nachfolgend „Netlify“). Wenn Sie die Seite aufrufen, erfasst Netlify
+    Logfiles, darunter Ihre IP-Adresse, Datum und Uhrzeit, die aufgerufene Datei und Ihren Browser. Details stehen in
+    der Datenschutzerklärung von Netlify:
+    <a href={betrieb.hosterDatenschutz} target="_blank" rel="noopener noreferrer">{betrieb.hosterDatenschutz}</a>.
+  </p>
+  <p>
+    Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Ich habe ein berechtigtes Interesse daran, dass die Seite
+    zuverlässig erreichbar ist. Die Datenübertragung in die USA stütze ich auf die Standardvertragsklauseln der
+    EU-Kommission. Mit Netlify habe ich einen Vertrag über Auftragsverarbeitung geschlossen.
+  </p>
+
+  <h2>4. Was in Ihrem Browser passiert</h2>
+  <p>
+    Wenn Sie ein Beispiel wählen, lädt Ihr Browser die Beispieldatei von dieser Seite und liest sie selbst: PDFs mit
+    pdf.js, Fotos und Scans mit der Texterkennung Tesseract. Auch die Programmteile der Texterkennung und das deutsche
+    Sprachpaket kommen von dieser Seite, nicht von fremden Servern. Die Schwärzung, die Prüfung der Textstellen und das
+    Ausfüllen des Beispielformulars laufen ebenfalls in Ihrem Browser.
+  </p>
+  <p>
+    Diese Seite setzt keine Cookies, nutzt keine Besucherstatistik, kein Tracking und keine eingebundenen Inhalte
+    anderer Anbieter wie Schriften, Videos oder Karten. In der Demo speichert sie auch nichts im Speicher Ihres Browsers.
+  </p>
+  <p>
+    Wenn Sie Fristen in Ihren Kalender übernehmen, erzeugt Ihr Browser eine Kalenderdatei. Was danach mit dem Eintrag
+    passiert, hängt von Ihrem Kalender ab, zum Beispiel ob er ihn in eine Cloud überträgt. Der Eintrag heißt deshalb nur
+    „Frist aus einem Brief“ und enthält keine Namen.
+  </p>
+
+  <h2>5. KI in dieser Demo</h2>
+  <p>
+    In der Demo werden keine Daten an eine KI übermittelt. Die angezeigten Erklärungen wurden vorher einmalig mit Claude
+    (Anthropic PBC, USA) aus den erfundenen Beispielbriefen erzeugt und liegen als Datei auf dieser Seite. Unter „Das sieht
+    die KI“ sehen Sie genau den Text, aus dem die jeweilige Erklärung entstanden ist.
+  </p>
+
+  <h2>6. Feedback</h2>
+  <p>
+    Am Ende können Sie mir eine Rückmeldung schicken. Das ist freiwillig. Gespeichert werden Ihre Bewertung, Ihr Text,
+    welches Beispiel Sie angesehen haben und der Zeitpunkt. Der Brief, die Erklärung und Ihre Formulareingaben gehören
+    nicht dazu.
+  </p>
+  <p>
+    Bitte schreiben Sie keine persönlichen Angaben in das Feedback. Namen, Adressen und Nummern, die der Briefhelfer
+    erkennt, werden vor dem Absenden in Ihrem Browser durch Platzhalter ersetzt.
+  </p>
+  <p>
+    Das Formular läuft über Netlify Forms. Ihre Eingaben werden an Netlify übertragen und dort gespeichert. Ich lese sie,
+    um den Briefhelfer zu verbessern, und lösche sie nach spätestens {betrieb.feedbackSpeicherdauer}. Rechtsgrundlage
+    ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO, die Sie mit dem Absenden geben. Sie können sie jederzeit per
+    E-Mail an {kontakt.mail} widerrufen. Anbieter und Datenübertragung in die USA stehen unter „Hosting“.
+  </p>
+
+  <h2>7. Ihre Rechte</h2>
+  <p>
+    Sie haben das Recht auf Auskunft über Ihre gespeicherten Daten, auf Berichtigung, Löschung und Einschränkung der
+    Verarbeitung, auf Datenübertragbarkeit und darauf, einer Verarbeitung nach Art. 6 Abs. 1 lit. f DSGVO zu
+    widersprechen. Eine Einwilligung können Sie jederzeit für die Zukunft widerrufen. Schreiben Sie mir dazu an
+    <a href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>.
+  </p>
+  <p>
+    Sie können sich außerdem bei einer Datenschutz-Aufsichtsbehörde beschweren. Für mich zuständig ist die
+    Landesbeauftragte für den Datenschutz Niedersachsen, Prinzenstraße 5, 30159 Hannover.
+  </p>
+
+  <h2>8. Den Briefhelfer selbst betreiben</h2>
+  <p>
+    Den Quellcode gibt es frei zum Selbst-Betreiben auf
+    <a href={marke.quellcode} target="_blank" rel="noopener noreferrer">GitHub</a>, auch mit eigenen Briefen und eigenem
+    KI-Zugang. Wer das tut, ist
+    für diese Installation selbst verantwortlich. Diese Datenschutzerklärung gilt nur für die Demo von {marke.name}.
+  </p>
+</Recht>

@@ -1,0 +1,74 @@
+{
+  "id": "krankenkasse-familienversicherung",
+  "erzeugt": "2026-10-18",
+  "modell": "claude-opus-5-5",
+  "gesendet": "Krankenkasse Musterland\n  Kundenservice\n  [ADRESSE_1]\n  [PLZ_ORT_1]\n\nKrankenkasse Musterland · [PLZ_ORT_1]\nFrau\n[PERSON_1]\n[ADRESSE_2]\n[PLZ_ORT_2]\n\n  Versichertennummer: [KV_NUMMER_1]\n  Unser Zeichen: [AKTENZEICHEN_1]\n  09.10.2026\n\nFamilienversicherung Ihres Ehemannes Herrn [PERSON_2]\n\nSehr geehrte Frau [PERSON_1_NACHNAME],\nIhr Ehemann Herr [PERSON_2] ist bei uns über Sie familienversichert. Einmal im Jahr prüfen wir,\nob die Voraussetzungen dafür noch vorliegen.\nBitte senden Sie uns den beiliegenden Fragebogen zur Familienversicherung ausgefüllt und\nunterschrieben zurück. Fügen Sie bitte einen Nachweis über das Einkommen von Herrn [PERSON_2_VORNAME]\n[PERSON_1_NACHNAME] bei, zum Beispiel die letzte Gehaltsabrechnung oder den aktuellen Rentenbescheid.\nBitte schicken Sie uns die Unterlagen bis zum 20.11.2026.\nLiegt das monatliche Gesamteinkommen Ihres Ehemannes über 535 Euro, endet die\nFamilienversicherung. Er muss sich dann selbst versichern. Erhalten wir keine Antwort, müssen\nwir die Familienversicherung beenden.\n\nMit freundlichen Grüßen\nIhre Krankenkasse Musterland",
+  "antwort": {
+    "absender": "Krankenkasse Musterland, Kundenservice",
+    "worum": "Ihr Ehemann Herr [PERSON_2] ist über Sie bei der Krankenkasse familienversichert. Die Krankenkasse prüft einmal im Jahr, ob das noch möglich ist. Dafür möchte sie einen ausgefüllten Fragebogen und einen Nachweis über das Einkommen Ihres Mannes.",
+    "forderungen": [
+      {
+        "text": "Die Krankenkasse bittet Sie, den beiliegenden Fragebogen zur Familienversicherung auszufüllen, zu unterschreiben und zurückzuschicken.",
+        "beleg": "Bitte senden Sie uns den beiliegenden Fragebogen zur Familienversicherung ausgefüllt und unterschrieben zurück.",
+        "unsicher": ""
+      },
+      {
+        "text": "Die Krankenkasse möchte einen Nachweis über das Einkommen Ihres Mannes. Laut Brief geht zum Beispiel die letzte Gehaltsabrechnung oder der aktuelle Rentenbescheid.",
+        "beleg": "Fügen Sie bitte einen Nachweis über das Einkommen von Herrn [PERSON_2_VORNAME] [PERSON_1_NACHNAME] bei, zum Beispiel die letzte Gehaltsabrechnung oder den aktuellen Rentenbescheid.",
+        "unsicher": ""
+      }
+    ],
+    "fristen": [
+      {
+        "datum": "20.11.2026",
+        "datum_iso": "2026-11-20",
+        "was": "Bis zu diesem Tag sollen der Fragebogen und der Einkommensnachweis bei der Krankenkasse sein.",
+        "beleg": "Bitte schicken Sie uns die Unterlagen bis zum 20.11.2026.",
+        "unsicher": ""
+      }
+    ],
+    "folgen": [
+      {
+        "text": "Laut Brief beendet die Krankenkasse die Familienversicherung Ihres Mannes, wenn sie keine Antwort bekommt.",
+        "beleg": "Erhalten wir keine Antwort, müssen wir die Familienversicherung beenden.",
+        "unsicher": ""
+      },
+      {
+        "text": "Laut Brief endet die Familienversicherung, wenn Ihr Mann im Monat insgesamt mehr als 535 Euro Einkommen hat. Er muss sich dann laut Krankenkasse selbst versichern.",
+        "beleg": "Liegt das monatliche Gesamteinkommen Ihres Ehemannes über 535 Euro, endet die Familienversicherung. Er muss sich dann selbst versichern.",
+        "unsicher": ""
+      }
+    ],
+    "begriffe": [
+      {
+        "wort": "Familienversicherung",
+        "erklaerung": "Ehepartner oder Kinder sind über ein Familienmitglied kostenlos in der Krankenkasse mitversichert. Das geht nur, wenn sie wenig oder kein eigenes Einkommen haben."
+      },
+      {
+        "wort": "Versichertennummer",
+        "erklaerung": "Ihre persönliche Nummer bei der Krankenkasse. Sie steht auch auf Ihrer Versichertenkarte."
+      },
+      {
+        "wort": "Unser Zeichen",
+        "erklaerung": "Das Aktenzeichen der Krankenkasse. Geben Sie es an, wenn Sie der Krankenkasse schreiben."
+      },
+      {
+        "wort": "Nachweis",
+        "erklaerung": "Ein Dokument, das etwas beweist, hier die Höhe des Einkommens."
+      },
+      {
+        "wort": "Gehaltsabrechnung",
+        "erklaerung": "Das Papier vom Arbeitgeber, auf dem steht, wie viel Lohn man in einem Monat bekommen hat."
+      },
+      {
+        "wort": "Rentenbescheid",
+        "erklaerung": "Ein Brief der Rentenversicherung, in dem steht, wie viel Rente man bekommt."
+      },
+      {
+        "wort": "Gesamteinkommen",
+        "erklaerung": "Alles Geld, das jemand im Monat zusammen einnimmt, zum Beispiel Lohn, Rente oder Mieteinnahmen."
+      }
+    ],
+    "unsicher": "Der Fragebogen, der laut Brief beiliegt, ist im Text nicht enthalten. Was genau darin gefragt wird, ist daher nicht bekannt."
+  }
+}

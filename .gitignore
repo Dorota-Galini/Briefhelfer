@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.astro/
+
+# Umgebungsdateien: nur die Vorlagen werden eingecheckt
+.env
+.env.*
+!.env.example
+!.env.demo
+
+# Lokale Arbeitsdateien
+testbriefe/
+test/lokal/
+ki-feedback/
+docs/
+.claude/
+
+# Erzeugte Dateien
+pruefsatz/ergebnisse/
+public/tesseract/
+*.traineddata

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<!-- Vorlage für das Scan-Beispiel der Demo. Wird mit Edge headless fotografiert (scripts/scan-erzeugen.mjs).
+     Erfundenes Formular, keine echte Behörde. -->
+<style>
+  html, body { margin: 0; background: #ecebe6; }
+  .blatt {
+    width: 1240px; height: 1754px; box-sizing: border-box; padding: 110px 120px;
+    background: #fbfaf6; color: #1b1b1b; font: 25px/1.45 Arial, Helvetica, sans-serif;
+    transform: rotate(0.35deg); transform-origin: center; filter: blur(0.35px) contrast(0.95);
+  }
+  h1 { font-size: 38px; margin: 0 0 6px; }
+  .klein { font-size: 18px; color: #555; margin-bottom: 40px; }
+  h2 { font-size: 27px; margin: 42px 0 14px; }
+  .zeile { display: flex; align-items: baseline; gap: 16px; margin: 16px 0; }
+  .zeile .b { width: 360px; flex: none; }
+  .linie { flex: 1; border-bottom: 2px solid #333; height: 26px; }
+  .boxen { display: flex; flex-wrap: wrap; gap: 14px 44px; margin: 10px 0; }
+  .box { display: inline-flex; align-items: center; gap: 14px; }
+  .k { width: 30px; height: 30px; border: 3px solid #222; box-sizing: border-box; position: relative; }
+  .k.x::before, .k.x::after {
+    content: ''; position: absolute; left: -3px; top: 11px; width: 32px; height: 4px; background: #1a2a7a;
+    transform: rotate(45deg);
+  }
+  .k.x::after { transform: rotate(-45deg); }
+  .hand { font-family: 'Segoe Print', 'Comic Sans MS', cursive; color: #1a2a7a; font-size: 27px; }
+  .vorab { margin: 0 0 10px; font-size: 24px; line-height: 1.4; }
+  .vorab .rechts { text-align: right; font-size: 21px; }
+  .wert { flex: 1; border-bottom: 2px solid #333; padding-left: 8px; font-family: 'Courier New', monospace; font-size: 26px; }
+  .unten { margin-top: 70px; display: flex; gap: 60px; }
+  .unten div { flex: 1; border-top: 2px solid #333; padding-top: 6px; font-size: 19px; }
+</style>
+</head>
+<body>
+<div class="blatt">
+  <h1>Antrag auf Befreiung vom Rundfunkbeitrag</h1>
+  <div class="klein">Beispielformular des Briefhelfers – kein echtes Formular. Bitte vollständig ausfüllen und Zutreffendes ankreuzen.</div>
+
+  <!-- Vom Absender vorausgefüllt, wie bei vielen echten Formularen. Alle Angaben erfunden. -->
+  <!-- Eine Spalte: Tesseract verliert bei zwei Spalten im Kopf ganze Zeilen -->
+  <div class="vorab">
+    Frau<br />Erika Musterfrau<br />Gartenweg 4<br />12345 Musterstadt<br /><br />
+    Beitragsnummer: 412 345 678 · Telefon für Rückfragen: 030 9876543
+  </div>
+
+  <h2>1. Angaben zur antragstellenden Person</h2>
+  <div class="zeile"><span class="b">Familienname:</span><span class="wert">Musterfrau</span></div>
+  <div class="zeile"><span class="b">Vorname:</span><span class="wert">Erika</span></div>
+  <div class="zeile"><span class="b">Geburtsdatum:</span><span class="linie"></span></div>
+  <div class="zeile"><span class="b">Beitragsnummer:</span><span class="wert">412 345 678</span></div>
+
+  <h2>2. Grund der Befreiung</h2>
+  <div class="boxen">
+    <span class="box"><span class="k x"></span>Bürgergeld</span>
+    <span class="box"><span class="k"></span>Grundsicherung im Alter</span>
+    <span class="box"><span class="k"></span>BAföG</span>
+    <span class="box"><span class="k"></span>Sonstiges</span>
+  </div>
+  <div class="zeile"><span class="b">Bewilligt bis (Datum):</span><span class="linie"></span></div>
+
+  <h2>3. Weitere Personen in der Wohnung</h2>
+  <div class="boxen">
+    <span class="box"><span class="k"></span>Ich wohne allein</span>
+    <span class="box"><span class="k"></span>Mit Ehe- oder Lebenspartner</span>
+  </div>
+  <div class="zeile"><span class="b">Name der Partnerin / des Partners:</span><span class="linie"></span></div>
+
+  <h2>4. Nachweis</h2>
+  <p>Bitte legen Sie eine Kopie Ihres aktuellen Bescheids bei. Ohne Nachweis kann der Antrag nicht bearbeitet werden.</p>
+
+  <div class="unten">
+    <div>Ort, Datum</div>
+    <div>Unterschrift</div>
+  </div>
+</div>
+</body>
+</html>

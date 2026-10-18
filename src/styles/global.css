@@ -1,0 +1,380 @@
+:root {
+  --bg: #f7f5f0;
+  --flaeche: #ffffff;
+  --text: #1d1b18;
+  --leise: #5a554d;
+  --linie: #d9d3c7;
+  --akzent: #1f5d4c;
+  --akzent-text: #ffffff;
+  --markiert: #1d1b18;
+  --markiert-text: #f7f5f0;
+  --frei: #fbe7b5;
+  --fehler: #9b1c1c;
+  --fokus: #b45309;
+  --radius: 10px;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #171614;
+    --flaeche: #211f1c;
+    --text: #f1ede5;
+    --leise: #b5aea3;
+    --linie: #3a3631;
+    --akzent: #6fc2a8;
+    --akzent-text: #0f1a16;
+    --markiert: #f1ede5;
+    --markiert-text: #171614;
+    --frei: #5c4a1c;
+    --fehler: #f19999;
+    --fokus: #f5a524;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .5rem; }
+h2 { font-size: 1.3rem; margin: 2.5rem 0 .75rem; }
+p { margin: 0 0 1rem; }
+.leise { color: var(--leise); }
+
+:focus-visible {
+  outline: 3px solid var(--fokus);
+  outline-offset: 2px;
+}
+
+.karte {
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.versprechen {
+  display: grid;
+  gap: .5rem;
+  padding-left: 1.2rem;
+  margin: 1rem 0 0;
+}
+
+button, .knopf {
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--radius);
+  border: 2px solid var(--akzent);
+  background: var(--akzent);
+  color: var(--akzent-text);
+  padding: .65rem 1.1rem;
+  min-height: 44px;
+}
+button.zweit {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--linie);
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+.datei {
+  display: block;
+  border: 2px dashed var(--linie);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+.datei input { font: inherit; margin-top: .75rem; max-width: 100%; }
+
+.feld { margin-bottom: 1.25rem; }
+.feld label { display: block; font-weight: 600; margin-bottom: .35rem; }
+.feld input {
+  width: 100%;
+  font: inherit;
+  padding: .6rem .75rem;
+  min-height: 44px;
+  border-radius: var(--radius);
+  border: 1px solid var(--linie);
+  background: var(--flaeche);
+  color: var(--text);
+}
+.hilfe { font-size: .9rem; margin: .35rem 0 0; }
+
+details { margin-top: 1rem; }
+textarea {
+  width: 100%;
+  min-height: 10rem;
+  font: inherit;
+  padding: .75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--linie);
+  background: var(--flaeche);
+  color: var(--text);
+}
+
+.hinweis {
+  border-left: 4px solid var(--fokus);
+  background: var(--flaeche);
+  padding: .9rem 1rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin-bottom: 1rem;
+}
+
+.status { min-height: 1.6rem; margin-top: 1rem; }
+.status.fehler { color: var(--fehler); }
+progress { width: 100%; height: .6rem; }
+
+/* Der Prüfbereich ist breiter als der Fließtext, damit ganze Briefzeilen hineinpassen. */
+#pruefung {
+  width: min(72rem, calc(100vw - 2rem));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  container-type: inline-size;
+}
+
+/* Briefansicht: Zeichenraster wie im Original, kein Umbruch.
+   --zeichen = Länge der längsten Zeile (per Script gesetzt). Die Schrift wird so klein,
+   dass diese Zeile genau hineinpasst. Erst unterhalb der Mindestgröße wird seitlich gescrollt. */
+.vorschau,
+pre.ki {
+  white-space: pre;
+  overflow-x: auto;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: clamp(.5rem, calc((100cqi - 2.75rem) / (var(--zeichen, 80) * 0.61)), .9rem);
+  line-height: 1.6;
+}
+
+/* Markierung ohne Innenabstand, sonst verschieben sich die Spalten. */
+.mark {
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0 0 0 2px var(--markiert);
+  background: var(--markiert);
+  color: var(--markiert-text);
+}
+.mark[aria-pressed='false'] { box-shadow: 0 0 0 2px var(--frei); }
+.mark[aria-pressed='false'] {
+  background: var(--frei);
+  color: var(--text);
+  text-decoration: line-through;
+}
+
+.werkzeuge { display: flex; flex-wrap: wrap; gap: .75rem; margin: 1rem 0; }
+
+.legende { font-size: .9rem; }
+
+pre.ki { margin: 0; }
+
+.einwilligung {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+  margin: 1.25rem 0 .5rem;
+}
+.einwilligung input { width: 1.4rem; height: 1.4rem; margin-top: .2rem; flex: none; }
+
+#ergebnis h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+.block { margin-bottom: 1rem; }
+.block ol, .block ul { margin: 0; padding-left: 1.3rem; display: grid; gap: .4rem; }
+.block p:last-child { margin-bottom: 0; }
+.fristen { margin-bottom: 1rem !important; }
+dl { margin: 0; }
+dt { font-weight: 600; margin-top: .5rem; }
+dt:first-child { margin-top: 0; }
+dd { margin: 0; }
+
+/* Formular ausfüllen */
+.felder { display: grid; gap: .75rem; margin: 1rem 0; }
+.feld-karte p { margin: .35rem 0; }
+.feld-kopf { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; }
+.feld-titel { font-weight: 600; }
+.abzeichen {
+  font-size: .75rem;
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  border: 1px solid var(--linie);
+  color: var(--leise);
+}
+.abzeichen.pflicht { border-color: var(--fokus); color: var(--text); }
+.abzeichen.seite { margin-left: auto; }
+.feld-karte input[type='text'],
+.feld-karte textarea,
+.feld-karte select {
+  width: 100%;
+  font: inherit;
+  padding: .55rem .7rem;
+  min-height: 44px;
+  margin-top: .5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--linie);
+  background: var(--bg);
+  color: var(--text);
+}
+.feld-karte textarea { min-height: 6rem; }
+.optionen { border: none; padding: 0; margin: .5rem 0 0; display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
+.optionen label { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Feedback */
+.feedback { margin-top: 2.5rem; }
+.feedback h2 { margin-top: 0; }
+.bewertung { border: none; padding: 0; margin: 1rem 0; display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
+.bewertung legend { font-weight: 600; margin-bottom: .4rem; }
+.bewertung label { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; }
+.feedback textarea { margin-top: .4rem; }
+
+/* Fußzeile und Absender in der Ecke */
+.fuss {
+  max-width: 46rem;
+  margin: 3rem auto 0;
+  padding: 1.5rem 1rem 6rem; /* Platz unten, damit der Absender in der Ecke nichts verdeckt */
+  border-top: 1px solid var(--linie);
+  font-size: .9rem;
+}
+.fuss nav { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-bottom: .5rem; }
+.fuss a { color: var(--text); }
+.absender {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 10;
+  display: grid;
+  line-height: 1.2;
+  padding: .5rem .8rem;
+  border-radius: var(--radius);
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgb(0 0 0 / .08);
+}
+.absender:hover { border-color: var(--akzent); }
+.absender-klein { font-size: .7rem; color: var(--leise); }
+.absender-name { font-size: .9rem; font-weight: 600; }
+/* Am Handy würde der feste Hinweis Eingabefelder verdecken: dort steht er am Seitenende */
+@media (max-width: 640px) {
+  .fuss { padding-bottom: 1rem; }
+  .absender { position: static; display: inline-grid; margin: 0 1rem 1.5rem; box-shadow: none; }
+}
+@media print { .absender, .fuss { display: none !important; } }
+
+/* Rechtsseiten */
+.recht h2 { font-size: 1.15rem; margin-top: 2rem; }
+.recht h3 { font-size: 1rem; margin: 1.25rem 0 .4rem; }
+.recht p, .recht li { font-size: .95rem; }
+
+/* Was mit Ihren Daten passiert */
+.daten { margin: 1.5rem 0 2rem; }
+.daten h2 { margin-top: 0; }
+.daten-spalten { display: grid; gap: .75rem; }
+@media (min-width: 720px) { .daten-spalten { grid-template-columns: repeat(3, 1fr); } }
+.daten-block {
+  background: var(--flaeche);
+  border: 1px solid var(--linie);
+  border-top: 4px solid var(--linie);
+  border-radius: var(--radius);
+  padding: 1rem;
+  font-size: .95rem;
+}
+.daten-block h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+.daten-block p, .daten-block ul { margin: 0; }
+.daten-block ul { padding-left: 1.1rem; display: grid; gap: .3rem; }
+.daten-block.bleibt { border-top-color: var(--akzent); }
+.daten-block.ki { border-top-color: var(--fokus); }
+.daten-block.mich { border-top-color: var(--leise); }
+
+/* Beispielauswahl (Demo) */
+.beispiele { list-style: none; padding: 0; display: grid; gap: .6rem; margin: 0 0 1rem; }
+.beispiele li { display: grid; gap: .2rem; }
+.beispiel {
+  text-align: left;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 2px solid var(--linie);
+  display: grid;
+  gap: .2rem;
+  padding: .8rem 1rem;
+}
+.beispiel span { font-size: .92rem; color: var(--leise); }
+.beispiel[aria-current='true'] { border-color: var(--akzent); }
+.original { font-size: .85rem; justify-self: start; }
+
+/* Aussagen mit Beleg */
+.aussagen { list-style: none; padding: 0 !important; display: grid; gap: .9rem !important; }
+ol.aussagen { counter-reset: aussage; }
+ol.aussagen > .aussage { counter-increment: aussage; }
+ol.aussagen > .aussage > p:first-child::before { content: counter(aussage) '. '; font-weight: 600; }
+.aussage p { margin: 0; }
+.beleg {
+  margin-top: .4rem;
+  padding: .45rem .7rem;
+  border-left: 3px solid var(--linie);
+  font-size: .9rem;
+  display: grid;
+  gap: .2rem;
+}
+.beleg q { font-style: italic; }
+.beleg-kopf { font-weight: 600; font-size: .85rem; }
+.beleg.gefunden { border-left-color: var(--akzent); }
+.beleg.gefunden .beleg-kopf { color: var(--akzent); }
+.beleg.aehnlich, .beleg.nicht, .beleg.fehlt { border-left-color: var(--fokus); }
+.aussage-unsicher { margin-top: .35rem !important; font-size: .9rem; color: var(--fokus); }
+.kalender-wahl { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; font-size: .95rem; }
+.kalender-wahl input { width: 1.2rem; height: 1.2rem; }
+#kalender-bereich { margin-top: 1rem; }
+
+/* Art des Dokuments */
+.art-wahl {
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+  margin: 1.25rem 0 0;
+  display: grid;
+  gap: .25rem;
+}
+.art-wahl legend { font-weight: 600; padding: 0 .25rem; }
+.art-wahl label { display: flex; gap: .6rem; align-items: center; min-height: 44px; }
+.art-wahl input { width: 1.2rem; height: 1.2rem; flex: none; }
+.art-wahl .hilfe:empty { display: none; }
+
+/* Gescannte Formulare: Liste zum Ausfüllen von Hand */
+.liste-titel { margin: 1.5rem 0 .5rem; }
+.scan-felder h4 { margin: 1.25rem 0 .5rem; font-size: 1rem; }
+.scan-felder ol { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; counter-reset: none; }
+.scan-feld p { margin: .35rem 0 0; }
+
+@media print {
+  body.drucke-scan { background: #fff; color: #000; font-size: 11pt; }
+  body.drucke-scan main > *:not(#scan-ergebnis) { display: none !important; }
+  body.drucke-scan .nicht-drucken { display: none !important; }
+  body.drucke-scan .karte { border: 1px solid #999; break-inside: avoid; background: #fff; }
+  body.drucke-scan .leise, body.drucke-scan .abzeichen { color: #333; }
+}
+
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

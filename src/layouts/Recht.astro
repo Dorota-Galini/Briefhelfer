@@ -1,0 +1,24 @@
+---
+// Rahmen für Impressum und Datenschutzerklärung
+import '../styles/global.css';
+import Fuss from '../components/Fuss.astro';
+interface Props { titel: string }
+const { titel } = Astro.props;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>{titel} · Briefhelfer</title>
+  </head>
+  <body>
+    <main class="recht">
+      <p><a href="/">← Zurück zum Briefhelfer</a></p>
+      <h1>{titel}</h1>
+      <slot />
+    </main>
+    <Fuss />
+  </body>
+</html>

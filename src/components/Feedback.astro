@@ -1,0 +1,76 @@
+---
+// Feedback an Dorota, über Netlify Forms (nur in der Demo, dort liegt die Seite bei Netlify).
+// Netlify erkennt das Formular beim Bauen an data-netlify. Gesendet wird per fetch an "/".
+// Mitgeschickt werden nur Bewertung, Text und das Beispiel, nie der Brief oder Formulareingaben.
+---
+<section id="feedback" class="karte feedback" hidden aria-labelledby="feedback-titel">
+  <h2 id="feedback-titel">Wie war es? Sagen Sie es mir.</h2>
+  <p>
+    Ich bin Dorota und habe den Briefhelfer gebaut. Mich interessiert vor allem, was nicht geklappt hat: eine
+    Erklärung, die falsch oder unverständlich war, ein Name, der nicht geschwärzt wurde, eine Stelle, an der Sie nicht
+    weiterwussten. Kritik hilft mir mehr als Lob.
+  </p>
+  <p class="leise">
+    Was Sie hier schreiben, lese ich. Den Brief, die Erklärung und Ihre Eingaben im Formular bekomme ich nicht.
+  </p>
+
+  <form name="feedback" method="POST" data-netlify="true" netlify-honeypot="fax" id="feedback-form">
+    <input type="hidden" name="form-name" value="feedback" />
+    <input type="hidden" name="beispiel" id="feedback-beispiel" />
+    <p hidden><label>Nicht ausfüllen: <input name="fax" tabindex="-1" autocomplete="off" /></label></p>
+
+    <fieldset class="bewertung">
+      <legend>Wie hilfreich war die Erklärung?</legend>
+      <label><input type="radio" name="bewertung" value="1" /> gar nicht</label>
+      <label><input type="radio" name="bewertung" value="2" /> wenig</label>
+      <label><input type="radio" name="bewertung" value="3" /> teils</label>
+      <label><input type="radio" name="bewertung" value="4" /> ziemlich</label>
+      <label><input type="radio" name="bewertung" value="5" /> sehr</label>
+    </fieldset>
+
+    <label for="feedback-text" class="feld-titel">Was sollte ich verbessern?</label>
+    <textarea id="feedback-text" name="text" maxlength="2000" rows="5"
+      placeholder="Zum Beispiel: Die Frist stand im Brief anders. Oder: Ich wusste nicht, wo ich klicken soll."></textarea>
+    <p class="leise hilfe">Bitte keine Namen, Adressen oder Nummern. Was der Briefhelfer davon erkennt, schwärzt er vor dem Absenden.</p>
+
+    <div class="werkzeuge">
+      <button type="submit">Feedback abschicken</button>
+    </div>
+    <p id="feedback-status" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<script>
+  import { findePersonendaten, pseudonymisiere } from '../lib/pseudonymize';
+
+  const form = document.getElementById('feedback-form') as HTMLFormElement | null;
+  const status = document.getElementById('feedback-status')!;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const daten = new FormData(form);
+    const roh = String(daten.get('text') ?? '').trim();
+    if (!roh && !daten.get('bewertung')) {
+      status.textContent = 'Bitte wählen Sie eine Bewertung oder schreiben Sie ein paar Worte.';
+      return;
+    }
+    // Sicherheitsnetz: erkannte persönliche Angaben vor dem Absenden ersetzen
+    const sauber = pseudonymisiere(roh, findePersonendaten(roh)).text;
+    daten.set('text', sauber);
+    try {
+      const r = await fetch('/', {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(daten as unknown as Record<string, string>).toString(),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      form.reset();
+      status.textContent =
+        sauber !== roh
+          ? 'Danke, Ihre Nachricht ist bei mir angekommen. Ein paar Angaben darin habe ich vorher unkenntlich gemacht.'
+          : 'Danke, Ihre Nachricht ist bei mir angekommen.';
+    } catch {
+      status.textContent = 'Das hat nicht geklappt. Schreiben Sie mir gern stattdessen eine E-Mail.';
+    }
+  });
+</script>

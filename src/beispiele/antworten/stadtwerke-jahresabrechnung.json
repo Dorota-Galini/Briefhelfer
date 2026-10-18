@@ -1,0 +1,70 @@
+{
+  "id": "stadtwerke-jahresabrechnung",
+  "erzeugt": "2026-10-18",
+  "modell": "claude-opus-5-5",
+  "gesendet": "Stadtwerke Musterstadt\n  [ADRESSE_1]\n  [PLZ_ORT_1]\n\nStadtwerke Musterstadt · [ADRESSE_1] · [PLZ_ORT_1]\nFrau\n[PERSON_1]\n[ADRESSE_2]\n[PLZ_ORT_2]\n\n  Kundennummer: [AKTENZEICHEN_1]\n  Vertragskonto: [AKTENZEICHEN_2]\n  06.10.2026\n\nIhre Jahresabrechnung Strom 2025\n\nSehr geehrte Frau [PERSON_1_NACHNAME],\nanbei erhalten Sie Ihre Jahresabrechnung für Strom vom 01.01.2025 bis 31.12.2025. Ihr\nVerbrauch lag bei 2.180 kWh.\nIhre monatlichen Abschläge haben die Kosten vollständig gedeckt. Eine Nachzahlung ist nicht\nerforderlich. Das Guthaben von 23,40 € überweisen wir in den nächsten Tagen auf Ihr Konto.\nIhr neuer monatlicher Abschlag beträgt ab dem 01.11.2026 weiterhin 62,00 €.\nBitte senden Sie uns den beigefügten Bogen mit Ihrem aktuellen Zählerstand bis zum 15.11.2026\nzurück. Damit können wir den Abschlag genauer berechnen.\n\nMit freundlichen Grüßen\nIhre Stadtwerke Musterstadt",
+  "antwort": {
+    "absender": "Stadtwerke Musterstadt (Stromversorger)",
+    "worum": "Das ist die Jahresabrechnung für Strom vom 01.01.2025 bis 31.12.2025. Laut Brief lag Ihr Verbrauch bei 2.180 kWh. Ihre monatlichen Zahlungen haben die Kosten gedeckt, und die Stadtwerke wollen Ihnen ein Guthaben von 23,40 € überweisen.",
+    "forderungen": [
+      {
+        "text": "Die Stadtwerke bitten Sie, den beigefügten Bogen mit Ihrem aktuellen Zählerstand zurückzuschicken. Damit wollen sie den Abschlag genauer berechnen.",
+        "beleg": "Bitte senden Sie uns den beigefügten Bogen mit Ihrem aktuellen Zählerstand bis zum 15.11.2026\nzurück.",
+        "unsicher": ""
+      },
+      {
+        "text": "Laut Brief beträgt Ihr monatlicher Abschlag ab dem 01.11.2026 weiterhin 62,00 €. Der Betrag bleibt also gleich.",
+        "beleg": "Ihr neuer monatlicher Abschlag beträgt ab dem 01.11.2026 weiterhin 62,00 €.",
+        "unsicher": "Im Brief steht „neuer“ und gleichzeitig „weiterhin“. Das heißt wahrscheinlich: Der Betrag ändert sich nicht."
+      }
+    ],
+    "fristen": [
+      {
+        "datum": "01.11.2026",
+        "datum_iso": "2026-11-01",
+        "was": "Ab diesem Tag gilt der monatliche Abschlag von 62,00 €.",
+        "beleg": "Ihr neuer monatlicher Abschlag beträgt ab dem 01.11.2026 weiterhin 62,00 €.",
+        "unsicher": ""
+      },
+      {
+        "datum": "15.11.2026",
+        "datum_iso": "2026-11-15",
+        "was": "Bis zu diesem Tag sollen Sie den Bogen mit Ihrem Zählerstand zurückschicken.",
+        "beleg": "Bitte senden Sie uns den beigefügten Bogen mit Ihrem aktuellen Zählerstand bis zum 15.11.2026\nzurück.",
+        "unsicher": ""
+      }
+    ],
+    "folgen": [],
+    "begriffe": [
+      {
+        "wort": "Jahresabrechnung",
+        "erklaerung": "Eine Rechnung über den Stromverbrauch und die Kosten für ein ganzes Jahr."
+      },
+      {
+        "wort": "kWh (Kilowattstunde)",
+        "erklaerung": "Die Einheit, in der Stromverbrauch gemessen wird."
+      },
+      {
+        "wort": "Abschlag",
+        "erklaerung": "Ein fester Betrag, den Sie jeden Monat im Voraus für Strom zahlen. Am Jahresende wird abgerechnet."
+      },
+      {
+        "wort": "Nachzahlung",
+        "erklaerung": "Geld, das Sie zusätzlich zahlen müssten, wenn die Abschläge nicht gereicht haben."
+      },
+      {
+        "wort": "Guthaben",
+        "erklaerung": "Geld, das Sie zu viel bezahlt haben und zurückbekommen."
+      },
+      {
+        "wort": "Zählerstand",
+        "erklaerung": "Die Zahl, die auf Ihrem Stromzähler steht. Sie zeigt, wie viel Strom verbraucht wurde."
+      },
+      {
+        "wort": "Vertragskonto",
+        "erklaerung": "Eine Nummer, unter der Ihr Stromvertrag bei den Stadtwerken geführt wird."
+      }
+    ],
+    "unsicher": "Der im Brief genannte Bogen für den Zählerstand ist im Text nicht enthalten. Möglicherweise fehlen auch weitere Seiten der Abrechnung mit den genauen Kosten."
+  }
+}

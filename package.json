@@ -1,0 +1,32 @@
+{
+  "name": "briefhelfer",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "pruefsatz": "vitest run --config vitest.pruefsatz.config.ts",
+    "predev": "node scripts/tesseract-kopieren.mjs",
+    "prebuild": "node scripts/tesseract-kopieren.mjs",
+    "dev:demo": "node scripts/tesseract-kopieren.mjs && astro dev --mode demo",
+    "build:demo": "node scripts/tesseract-kopieren.mjs && astro build --mode demo"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@astrojs/node": "^9.5.5",
+    "@tesseract.js-data/deu": "^1.0.0",
+    "astro": "^5.7.0",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^6.0.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "vitest": "^3.1.1"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "Dorota Mikolajczyk, Galini Studio (https://galini-studio.de)"
+}

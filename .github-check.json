@@ -1,0 +1,13 @@
+{
+  "erlaubteTexte": [
+    "kontakt@galini-studio.de",
+    "0155 67684966",
+    "+4915567684966",
+    "0441 000000",
+    "030 1234567",
+    "030 9876543"
+  ],
+  "erlaubteDateien": [
+    "public/beispiele/*"
+  ]
+}

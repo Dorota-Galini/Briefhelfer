@@ -1,0 +1,1045 @@
+---
+import '../styles/global.css';
+import { MODUS, marke } from '../config';
+import { BEISPIELE } from '../beispiele';
+import Feedback from '../components/Feedback.astro';
+import Fuss from '../components/Fuss.astro';
+const demo = MODUS === 'demo';
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Briefhelfer</title>
+    <meta name="description" content="Briefe vom Amt verstehen. Ihre persönlichen Daten bleiben auf Ihrem Gerät." />
+  </head>
+  <body>
+    <main>
+      <h1>Briefhelfer</h1>
+      <p class="leise">Briefe vom Amt verstehen, in einfachem Deutsch.</p>
+      {demo && (
+        <p>
+          Das hier ist eine Demo mit fünf erfundenen Briefen und Formularen. Sie sehen, wie der Briefhelfer einen Brief
+          liest, persönliche Angaben schwärzt und erklärt. Eigene Briefe laden Sie hier nicht hoch.
+        </p>
+      )}
+
+      <section class="daten" aria-labelledby="daten-titel">
+        <h2 id="daten-titel">Was mit Ihren Daten passiert</h2>
+        <div class="daten-spalten">
+          <div class="daten-block bleibt">
+            <h3>Bleibt auf Ihrem Gerät</h3>
+            {demo ? (
+              <p>
+                Alles, was Sie hier tun. Der Beispielbrief wird in Ihrem Browser gelesen, geschwärzt und angezeigt.
+                Was Sie ins Wohngeld-Formular tippen, und das fertige PDF verlassen Ihr Gerät nicht.
+              </p>
+            ) : (
+              <ul>
+                <li>die Datei mit Ihrem Brief, ob PDF oder Foto</li>
+                <li>der ganze Text mit allen Namen und Nummern</li>
+                <li>welcher Platzhalter für welchen Namen steht</li>
+                <li>alles, was Sie in ein Formular eintragen, und das fertige PDF</li>
+                <li>Ihr Name aus dem Feld unten, gespeichert in diesem Browser, bis Sie das Feld leeren</li>
+              </ul>
+            )}
+          </div>
+          <div class="daten-block ki">
+            <h3>Geht an eine KI</h3>
+            {demo ? (
+              <p>
+                In dieser Demo nichts. Die Erklärungen hat Claude, die KI von Anthropic, vorher erzeugt, und zwar aus genau
+                dem geschwärzten Text, den Sie unter „Das sieht die KI“ sehen.
+              </p>
+            ) : (
+              <p>
+                Nur der geschwärzte Text, den Sie unter „Das sieht die KI“ sehen, bei Formularen dazu die Namen der Felder.
+                Er geht über diesen Server an Claude von Anthropic in den USA, und erst, wenn Sie zustimmen. Die automatische
+                Schwärzung kann etwas übersehen. Auch der übrige Inhalt, etwa eine Krankheit oder ein Arbeitgeber, kann
+                Rückschlüsse auf Sie erlauben. Deshalb lesen Sie den Text vor dem Senden selbst.
+              </p>
+            )}
+          </div>
+          <div class="daten-block mich">
+            <h3>{demo ? 'Geht an mich' : 'Geht an den Betreiber'}</h3>
+            {demo ? (
+              <p>
+                Nur, was Sie mir am Ende freiwillig ins Feedback schreiben. Das lese ich, sonst nichts. Ihre Eingaben im
+                Formular bekomme ich nie zu sehen.
+              </p>
+            ) : (
+              <p>
+                Der Server speichert keine Briefe und keine Erklärungen. Für das Tageslimit merkt er sich Ihre IP-Adresse
+                im Arbeitsspeicher, längstens bis Mitternacht.
+              </p>
+            )}
+          </div>
+        </div>
+        <p class="leise hilfe">Genaueres steht in der <a href="/datenschutz">Datenschutzerklärung</a>.</p>
+      </section>
+
+      {demo && (
+        <section aria-labelledby="schritt1d">
+          <h2 id="schritt1d">1. Beispiel auswählen</h2>
+          <ul class="beispiele">
+            {BEISPIELE.map((b) => (
+              <li>
+                <button type="button" class="beispiel" data-beispiel={b.id}>
+                  <strong>{b.titel}</strong>
+                  <span>{b.kurz}</span>
+                </button>
+                <a class="leise original" href={b.datei} target="_blank" rel="noopener">Original ansehen</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <div id="upload-bereich" hidden={demo}>
+      <h2 id="schritt1">1. Brief auswählen</h2>
+      <div class="feld">
+        <label for="eigene">Ihr Name <span class="leise">(freiwillig)</span></label>
+        <input id="eigene" type="text" autocomplete="name" placeholder="z. B. Anna Kowalski" />
+        <p class="leise hilfe">
+          Wird überall im Brief geschwärzt, auch einzeln als Vor- oder Nachname. Mehrere Namen mit Komma trennen.
+          Der Name bleibt nur auf diesem Gerät.
+        </p>
+      </div>
+      <label class="datei">
+        PDF oder Foto vom Brief
+        <br />
+        <input id="datei" type="file" accept="application/pdf,image/jpeg,image/png,image/webp" />
+      </label>
+
+      <details>
+        <summary>Oder Text einfügen</summary>
+        <label for="eingabe" class="leise">Text des Briefes</label>
+        <textarea id="eingabe"></textarea>
+        <div class="werkzeuge">
+          <button id="text-uebernehmen" type="button" class="zweit">Text prüfen</button>
+        </div>
+      </details>
+      </div>
+
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+      <progress id="balken" max="1" value="0" hidden></progress>
+
+      <section id="pruefung" hidden aria-labelledby="schritt2">
+        <h2 id="schritt2" tabindex="-1">2. Schwärzung prüfen</h2>
+        <div class="hinweis" role="note">
+          <strong>Bitte lesen Sie den Brief einmal ganz durch.</strong>
+          Die automatische Erkennung findet nicht alles. Schwärzen Sie zusätzlich, was fehlt, zum Beispiel
+          Namen von Sachbearbeitern, Ansprechpartnern in der Behörde oder von Angehörigen.
+        </div>
+        <p>
+          Dunkel markierte Stellen werden geschwärzt. Klicken Sie eine Markierung an, um sie freizugeben.
+          Fehlt etwas? Markieren Sie die Stelle mit der Maus und drücken Sie „Auswahl schwärzen“.
+        </p>
+        <div class="werkzeuge">
+          <button id="auswahl-schwaerzen" type="button">Auswahl schwärzen</button>
+          <button id="alle-zuruecksetzen" type="button" class="zweit">Erkennung neu starten</button>
+        </div>
+        <p class="legende leise" id="zaehler"></p>
+        <div class="karte vorschau" id="vorschau"></div>
+
+        <h2>3. Das sieht die KI</h2>
+        <p class="leise">Nur dieser Text würde weitergegeben. Ihre echten Angaben setzt der Briefhelfer danach wieder ein, hier auf Ihrem Gerät.</p>
+        <div class="karte"><pre class="ki" id="ki-text"></pre></div>
+        {demo ? (
+          <p class="hinweis" id="demo-hinweis">
+            In dieser Demo wird nichts gesendet. Die Erklärung hat Claude vorher aus genau diesem Text erzeugt.
+            <span id="demo-abweichung" hidden>
+              Sie haben die Schwärzung geändert. Die gespeicherte Erklärung beruht auf der automatischen Schwärzung.
+            </span>
+          </p>
+        ) : null}
+        <label class="einwilligung" hidden={demo}>
+          <input id="einwilligung" type="checkbox" checked={demo} />
+          <span>
+            Ich willige ausdrücklich ein, dass der geschwärzte Text oben an Claude von Anthropic (USA) gesendet wird, damit
+            er erklärt wird. Briefe können Angaben zur Gesundheit oder zu Sozialleistungen enthalten, auch über andere
+            Menschen. Senden Sie Briefe anderer nur, wenn diese einverstanden sind.
+            <a href="/datenschutz">Datenschutzerklärung</a>
+          </span>
+        </label>
+        <fieldset class="art-wahl" id="art-wahl">
+          <legend>Was ist das für ein Dokument?</legend>
+          <label><input type="radio" name="art" value="brief" checked /> Ein Brief oder Vertrag, den ich verstehen möchte</label>
+          <label><input type="radio" name="art" value="scan" /> Ein Formular, das ich auf Papier ausfüllen muss</label>
+          <p class="leise hilfe" id="art-grund"></p>
+        </fieldset>
+        <div class="hinweis" id="formular-hinweis" hidden>
+          <strong id="formular-anzahl"></strong>
+          Die KI erklärt jedes Feld. An die KI gehen nur der Text oben und die Namen der Felder.
+          Was Sie eintragen, bleibt auf diesem Gerät.
+        </div>
+        <div class="werkzeuge">
+          <button id="senden" type="button" disabled>Brief erklären lassen</button>
+          <button id="ohne-ki" type="button" class="zweit" hidden>Ohne Erklärung ausfüllen</button>
+        </div>
+      </section>
+
+      <section id="scan-ergebnis" hidden aria-labelledby="schritt4s">
+        <h2 id="schritt4s" tabindex="-1">4. So füllen Sie das Formular aus</h2>
+        <p class="leise" id="s-name"></p>
+        <div class="karte block">
+          <h3>Wofür ist das Formular?</h3>
+          <p id="s-worum"></p>
+        </div>
+        <div class="karte block" id="s-block-vorbereitung">
+          <h3>Legen Sie bereit</h3>
+          <ul id="s-vorbereitung"></ul>
+        </div>
+        <div class="hinweis" id="s-block-hinweise"><strong>Wichtig:</strong> <span id="s-hinweise"></span></div>
+
+        <h3 class="liste-titel">Feld für Feld, in der Reihenfolge des Formulars</h3>
+        <p class="leise nicht-drucken">
+          Füllen Sie das Papierformular von Hand aus, am besten mit Kugelschreiber und in Druckbuchstaben.
+          Sie können diese Liste ausdrucken und daneben legen.
+        </p>
+        <div id="s-felder" class="scan-felder"></div>
+
+        <div class="hinweis" id="s-block-unsicher"><strong>Bitte im Original genau prüfen:</strong> <span id="s-unsicher"></span></div>
+
+        <div class="werkzeuge nicht-drucken">
+          <button id="s-drucken" type="button">Liste drucken</button>
+        </div>
+        <p class="leise">
+          Die Texterkennung bei Scans macht Fehler. Prüfen Sie jede Angabe am Original.
+          Der Briefhelfer ersetzt keine Rechtsberatung.
+        </p>
+      </section>
+
+      <section id="formular-ergebnis" hidden aria-labelledby="schritt4f">
+        <h2 id="schritt4f" tabindex="-1">4. Formular ausfüllen</h2>
+        <div id="formular-ueberblick">
+          <p class="leise" id="f-name"></p>
+          <div class="karte block">
+            <h3>Wofür ist das Formular?</h3>
+            <p id="f-worum"></p>
+          </div>
+          <div class="karte block" id="f-block-vorbereitung">
+            <h3>Legen Sie bereit</h3>
+            <ul id="f-vorbereitung"></ul>
+          </div>
+          <div class="hinweis" id="f-block-hinweise"><strong>Wichtig:</strong> <span id="f-hinweise"></span></div>
+          <div class="hinweis" id="f-block-unsicher"><strong>Nicht ganz sicher:</strong> <span id="f-unsicher"></span></div>
+        </div>
+
+        <p>Ihre Eingaben bleiben auf diesem Gerät. Sie werden nicht gesendet und nicht gespeichert.</p>
+        <form id="felder" class="felder" onsubmit="return false"></form>
+
+        <div class="werkzeuge">
+          <button id="pdf-laden" type="button">Ausgefülltes PDF herunterladen</button>
+        </div>
+        <p class="leise">
+          Prüfen Sie das PDF vor dem Absenden und unterschreiben Sie es, wenn das Formular das verlangt.
+          Der Briefhelfer ersetzt keine Rechtsberatung.
+        </p>
+      </section>
+
+      <section id="ergebnis" hidden aria-labelledby="schritt4">
+        <h2 id="schritt4" tabindex="-1">4. So ist der Brief gemeint</h2>
+        <p class="leise" id="absender"></p>
+
+        <div class="karte block">
+          <h3>Worum geht es?</h3>
+          <p id="worum"></p>
+        </div>
+
+        <p class="leise beleg-erklaerung">
+          Unter jeder Aussage steht die Stelle aus dem Brief, auf die sie sich stützt.
+          ✓ heißt: Diese Stelle steht wörtlich im Brief. Ob die Erklärung dazu stimmt, prüfen Sie bitte selbst.
+        </p>
+
+        <div class="karte block" id="block-forderungen">
+          <h3>Was der Absender von Ihnen verlangt</h3>
+          <ol id="forderungen" class="aussagen"></ol>
+        </div>
+
+        <div class="karte block" id="block-fristen">
+          <h3>Welche Fristen im Brief stehen</h3>
+          <ul id="fristen" class="aussagen"></ul>
+          <div id="kalender-bereich">
+            <p class="leise hilfe">
+              In den Kalender kommen nur Fristen mit genauem Datum, deren Textstelle wörtlich im Brief steht.
+              Der Eintrag heißt neutral „Frist aus einem Brief“, ohne Namen oder Inhalte.
+            </p>
+            <button id="kalender" type="button" class="zweit">Ausgewählte Fristen in den Kalender</button>
+          </div>
+        </div>
+
+        <div class="karte block" id="block-folgen">
+          <h3>Welche Folgen der Brief nennt</h3>
+          <ul id="folgen" class="aussagen"></ul>
+        </div>
+
+        <div class="karte block" id="block-begriffe">
+          <h3>Schwierige Wörter</h3>
+          <dl id="begriffe"></dl>
+        </div>
+
+        <div class="hinweis" id="block-unsicher">
+          <strong>Nicht ganz sicher:</strong> <span id="unsicher"></span>
+        </div>
+
+        <p class="leise">
+          Der Briefhelfer erklärt Briefe, er ersetzt keine Rechtsberatung. Prüfen Sie Fristen und Beträge immer im Original.
+          Im Zweifel helfen Beratungsstellen, die Verbraucherzentrale oder eine Anwältin.
+        </p>
+      </section>
+      {demo && <Feedback />}
+    </main>
+    <Fuss />
+
+    <script>
+      import { leseDatei, lesePdfStuecke } from '../lib/extract';
+      import { findePersonendaten, kompakt, pseudonymisiere, setzeZurueck, type Fund } from '../lib/pseudonymize';
+      import { fuelleFormular, liesFormular, type Feld, type Werte } from '../lib/formular';
+      import {
+        geschwaerzteFelder,
+        FormularHilfeSchema,
+        ScanHilfeSchema,
+        type FeldHilfe,
+        type FormularHilfe,
+        type ScanHilfe,
+      } from '../lib/formularhilfe';
+      import { schaetzeFormular } from '../lib/formularerkennung';
+      import { vorbereiten } from '../lib/ablauf';
+      import { MODUS } from '../config';
+      import { BEISPIELE, gespeicherteAntwort } from '../beispiele';
+      import { ErklaerungSchema, type Erklaerung } from '../lib/erklaerung';
+      import { baueIcs } from '../lib/kalender';
+      import { fristBelegt, pruefeBeleg } from '../lib/belegpruefung';
+
+      type Markierung = Fund & { aktiv: boolean };
+
+      const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+      const status = $('status');
+      const balken = $<HTMLProgressElement>('balken');
+      const pruefung = $('pruefung');
+      const vorschau = $('vorschau');
+      const kiText = $('ki-text');
+      const zaehler = $('zaehler');
+
+      let text = '';
+      let markierungen: Markierung[] = [];
+
+      function meldung(nachricht: string, anteil?: number, fehler = false) {
+        status.textContent = nachricht;
+        status.classList.toggle('fehler', fehler);
+        balken.hidden = anteil === undefined;
+        if (anteil !== undefined) balken.value = anteil;
+      }
+
+      function starte(neuerText: string) {
+        // Nur leere Zeilen am Rand entfernen, Einrückungen bleiben erhalten.
+        text = vorbereiten(neuerText);
+        if (!text) {
+          meldung('Es wurde kein Text gefunden. Versuchen Sie ein schärferes Foto.', undefined, true);
+          return;
+        }
+        markierungen = findePersonendaten(text, { eigeneAngaben: eigeneAngaben() }).map((f) => ({ ...f, aktiv: true }));
+        zeichne();
+        pruefung.hidden = false;
+        // Art nur bei einem neuen Dokument schätzen, nicht beim erneuten Prüfen desselben Textes
+        if (text !== geschaetzterText) {
+          geschaetzterText = text;
+          const s = schaetzeFormular(text);
+          setzeArt(s.istFormular ? 'scan' : 'brief');
+          $('art-grund').textContent = s.istFormular
+            ? `Das sieht aus wie ein Formular (${s.gruende.join(', ')}). Stimmt das nicht, wählen Sie oben „Brief“.`
+            : '';
+        }
+        meldung(`Fertig. ${markierungen.length} Stellen wurden erkannt.`);
+        $('schritt2').focus();
+      }
+
+      let geschaetzterText = '';
+
+      function art(): 'brief' | 'scan' {
+        return (document.querySelector<HTMLInputElement>('input[name="art"]:checked')?.value as 'brief' | 'scan') ?? 'brief';
+      }
+
+      function setzeArt(wert: 'brief' | 'scan') {
+        document.querySelectorAll<HTMLInputElement>('input[name="art"]').forEach((r) => (r.checked = r.value === wert));
+        aktualisiereKnopf();
+      }
+
+      function aktualisiereKnopf() {
+        const s = document.getElementById('senden');
+        if (!s) return;
+        s.textContent = MODUS === 'demo' ? 'Erklärung anzeigen' : felder.length > 0 || art() === 'scan' ? 'Formular erklären lassen' : 'Brief erklären lassen';
+      }
+
+      document.querySelectorAll('input[name="art"]').forEach((r) => r.addEventListener('change', aktualisiereKnopf));
+
+      // Eigener Name: nur im Browser gespeichert (localStorage), damit man ihn nicht jedes Mal eintippt.
+      const eigeneFeld = $<HTMLInputElement>('eigene');
+      try {
+        eigeneFeld.value = localStorage.getItem('briefhelfer.eigene') ?? '';
+      } catch {}
+      eigeneFeld.addEventListener('change', () => {
+        try {
+          localStorage.setItem('briefhelfer.eigene', eigeneFeld.value);
+        } catch {}
+        if (text) starte(text);
+      });
+
+      function eigeneAngaben(): string[] {
+        return eigeneFeld.value.split(',').map((s) => s.trim()).filter(Boolean);
+      }
+
+      function zeichne() {
+        vorschau.replaceChildren();
+        const sortiert = [...markierungen].sort((a, b) => a.start - b.start);
+        let pos = 0;
+        sortiert.forEach((m) => {
+          vorschau.append(segment(text.slice(pos, m.start), pos));
+          const knopf = document.createElement('button');
+          knopf.type = 'button';
+          knopf.className = 'mark';
+          knopf.textContent = text.slice(m.start, m.end);
+          knopf.dataset.offset = String(m.start);
+          knopf.setAttribute('aria-pressed', String(m.aktiv));
+          knopf.title = m.aktiv ? `${bezeichnung(m.kategorie)}, wird geschwärzt` : 'Freigegeben';
+          knopf.setAttribute('aria-label', `${knopf.textContent}: ${knopf.title}. Klicken zum Umschalten.`);
+          knopf.addEventListener('click', () => {
+            m.aktiv = !m.aktiv;
+            zeichne();
+            (vorschau.querySelector(`[data-offset="${m.start}"]`) as HTMLElement | null)?.focus();
+          });
+          vorschau.append(knopf);
+          pos = m.end;
+        });
+        vorschau.append(segment(text.slice(pos), pos));
+
+        const aktiv = markierungen.filter((m) => m.aktiv);
+        const vorschauP = pseudonymisiere(text, aktiv);
+        kiText.textContent = kompakt(vorschauP.text);
+        // Bei Formularen gehen auch die Feldangaben mit. Sie stehen hier, damit wirklich alles sichtbar ist.
+        if (felder.length > 0) {
+          const zeilen = feldBeschreibungen(new Map(vorschauP.zuordnung)).map((f) =>
+            [`${f.id} (${f.typ})`, f.name, f.tooltip, f.beschriftung, f.optionen.join(' / ')].filter(Boolean).join(' | '),
+          );
+          kiText.textContent += `\n\n--- Formularfelder ---\n${zeilen.join('\n')}`;
+        }
+
+        // Schriftgröße an die längste Zeile anpassen (siehe --zeichen in global.css)
+        const laengste = (t: string) => Math.max(20, ...t.split('\n').map((z) => z.length));
+        vorschau.style.setProperty('--zeichen', String(laengste(text)));
+        kiText.style.setProperty('--zeichen', String(laengste(kiText.textContent)));
+        zaehler.textContent = `${aktiv.length} von ${markierungen.length} Stellen werden geschwärzt.`;
+      }
+
+      function segment(inhalt: string, offset: number) {
+        const span = document.createElement('span');
+        span.textContent = inhalt;
+        span.dataset.offset = String(offset);
+        return span;
+      }
+
+      // Offset im Gesamttext aus einer Stelle der Auswahl berechnen.
+      function textOffset(knoten: Node, versatz: number): number | null {
+        const el = (knoten.nodeType === Node.TEXT_NODE ? knoten.parentElement : knoten) as HTMLElement | null;
+        const basis = el?.closest<HTMLElement>('[data-offset]');
+        if (!basis || !vorschau.contains(basis)) return null;
+        return Number(basis.dataset.offset) + (knoten.nodeType === Node.TEXT_NODE ? versatz : 0);
+      }
+
+      $('auswahl-schwaerzen').addEventListener('click', () => {
+        const auswahl = window.getSelection();
+        if (!auswahl || auswahl.isCollapsed || auswahl.rangeCount === 0) {
+          meldung('Markieren Sie zuerst eine Stelle im Text oben.', undefined, true);
+          return;
+        }
+        const r = auswahl.getRangeAt(0);
+        const a = textOffset(r.startContainer, r.startOffset);
+        const b = textOffset(r.endContainer, r.endOffset);
+        if (a === null || b === null || a === b) {
+          meldung('Die Auswahl liegt nicht im Brieftext.', undefined, true);
+          return;
+        }
+        let [start, end] = a < b ? [a, b] : [b, a];
+        // Leerzeichen am Rand abschneiden
+        while (start < end && /\s/.test(text[start])) start++;
+        while (end > start && /\s/.test(text[end - 1])) end--;
+        // Überlappende Markierungen werden in die neue übernommen
+        markierungen = markierungen.filter((m) => m.end <= start || m.start >= end);
+        markierungen.push({ start, end, original: text.slice(start, end), kategorie: 'MANUELL', aktiv: true });
+        auswahl.removeAllRanges();
+        zeichne();
+        meldung('Die Stelle wird jetzt geschwärzt.');
+      });
+
+      $('alle-zuruecksetzen').addEventListener('click', () => starte(text));
+
+      $<HTMLInputElement>('datei').addEventListener('change', async (e) => {
+        const datei = (e.target as HTMLInputElement).files?.[0];
+        if (!datei) return;
+        setzeFormular(null, []);
+        try {
+          meldung('Brief wird gelesen …', 0);
+          starte(await leseDatei(datei, (n, anteil) => meldung(n, anteil)));
+          if (datei.type === 'application/pdf' || datei.name.toLowerCase().endsWith('.pdf')) {
+            await pruefeAufFormular(datei);
+          }
+        } catch (err) {
+          console.error(err);
+          meldung(err instanceof Error ? err.message : 'Der Brief konnte nicht gelesen werden.', undefined, true);
+        }
+      });
+
+      // --- Senden und Ergebnis ---------------------------------------------------
+
+      const MAX_ZEICHEN = 100_000; // gleiche Grenze wie im Server
+      const senden = $<HTMLButtonElement>('senden');
+      const einwilligung = $<HTMLInputElement>('einwilligung');
+      const ergebnis = $('ergebnis');
+      let erklaerung: Erklaerung | null = null;
+      let zuordnung = new Map<string, string>();
+      let gesendetText = ''; // genau der Text, den die KI bekommen hat (für die Belegprüfung)
+
+      // --- KI fragen, in der Demo: gespeicherte Antwort nehmen -------------------
+
+      const DEMO = MODUS === 'demo';
+      if (DEMO) senden.disabled = false; // keine Einwilligung nötig, es wird nichts gesendet
+      let aktuellesBeispiel: string | null = null;
+
+      async function frage(url: string, body: Record<string, unknown>, feld: 'erklaerung' | 'hilfe' | 'scan') {
+        if (DEMO) {
+          const g = aktuellesBeispiel ? gespeicherteAntwort(aktuellesBeispiel) : null;
+          if (!g) throw new Error('Für dieses Beispiel gibt es keine gespeicherte Erklärung.');
+          // Belege werden gegen den Text geprüft, den die KI damals bekommen hat
+          gesendetText = g.gesendet;
+          $('demo-abweichung').hidden = g.gesendet === body.text;
+          return { [feld]: g.antwort };
+        }
+        const r = await fetch(url, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const daten = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(daten.fehler ?? 'Es ist ein Fehler aufgetreten.');
+        return daten;
+      }
+
+      // Beispiel laden: genau wie eine hochgeladene Datei
+      document.querySelectorAll<HTMLButtonElement>('[data-beispiel]').forEach((knopf) =>
+        knopf.addEventListener('click', async () => {
+          const b = BEISPIELE.find((x) => x.id === knopf.dataset.beispiel);
+          if (!b) return;
+          document.querySelectorAll('[data-beispiel]').forEach((k) => k.removeAttribute('aria-current'));
+          knopf.setAttribute('aria-current', 'true');
+          aktuellesBeispiel = b.id;
+          ergebnis.hidden = true;
+          setzeFormular(null, []);
+          try {
+            meldung('Beispiel wird gelesen …', 0);
+            const blob = await (await fetch(b.datei)).blob();
+            const datei = new File([blob], b.datei.split('/').pop()!, { type: blob.type });
+            starte(await leseDatei(datei, (n, anteil) => meldung(n, anteil)));
+            if (b.art === 'formular') await pruefeAufFormular(datei);
+            setzeArt(b.art === 'scan' ? 'scan' : 'brief');
+          } catch (err) {
+            console.error(err);
+            meldung('Das Beispiel konnte nicht gelesen werden.', undefined, true);
+          }
+        }),
+      );
+
+      einwilligung.addEventListener('change', () => (senden.disabled = !einwilligung.checked));
+
+      senden.addEventListener('click', async () => {
+        const p = pseudonymisiere(text, markierungen.filter((m) => m.aktiv));
+        zuordnung = p.zuordnung; // bleibt nur hier im Browser
+        const zuSenden = kompakt(p.text);
+        gesendetText = zuSenden;
+        if (felder.length > 0) return sendeFormular(zuSenden);
+        if (art() === 'scan') return sendeScan(zuSenden);
+        if (zuSenden.length > MAX_ZEICHEN) {
+          const seiten = Math.round(zuSenden.length / 2500);
+          meldung(
+            `Das Dokument ist zu lang (etwa ${seiten} Seiten). Der Briefhelfer schafft etwa 40 Seiten. ` +
+              'Entfernen Sie Seiten, die Sie nicht brauchen, zum Beispiel die allgemeinen Versicherungsbedingungen.',
+            undefined,
+            true,
+          );
+          return;
+        }
+        senden.disabled = true;
+        ergebnis.hidden = true;
+        $('scan-ergebnis').hidden = true;
+        meldung(
+          zuSenden.length > 20_000
+            ? 'Das Dokument wird erklärt. Bei langen Verträgen kann das bis zu 3 Minuten dauern …'
+            : 'Der Brief wird erklärt. Das dauert meist 20 bis 60 Sekunden …',
+        );
+        try {
+          const daten = await frage('/api/erklaeren', { text: zuSenden }, 'erklaerung');
+          erklaerung = ErklaerungSchema.parse(daten.erklaerung);
+          zeigeErgebnis(erklaerung);
+          meldung(
+            typeof daten.verbleibend === 'number'
+              ? `Fertig. Heute können Sie noch ${daten.verbleibend} Briefe erklären lassen.`
+              : 'Fertig.',
+          );
+        } catch (err) {
+          meldung(err instanceof Error ? err.message : 'Es ist ein Fehler aufgetreten.', undefined, true);
+        } finally {
+          senden.disabled = !einwilligung.checked;
+        }
+      });
+
+      // Nach einer Erklärung um Feedback bitten (das Formular gibt es nur in der Demo)
+      function zeigeFeedback() {
+        const fb = document.getElementById('feedback');
+        if (!fb) return;
+        fb.hidden = false;
+        const feld = document.getElementById('feedback-beispiel') as HTMLInputElement | null;
+        if (feld) feld.value = aktuellesBeispiel ?? '';
+      }
+
+      // Platzhalter lokal durch die echten Angaben ersetzen
+      const echt = (s: string) => setzeZurueck(s, zuordnung);
+
+      function zeigeErgebnis(e: Erklaerung) {
+        $('absender').textContent = e.absender ? `Absender: ${echt(e.absender)}` : '';
+        $('worum').textContent = echt(e.worum);
+
+        $('forderungen').replaceChildren(...e.forderungen.map((a) => aussageElement(a.text, a.beleg, a.unsicher)));
+        $('block-forderungen').hidden = e.forderungen.length === 0;
+
+        $('folgen').replaceChildren(...e.folgen.map((a) => aussageElement(a.text, a.beleg, a.unsicher)));
+        $('block-folgen').hidden = e.folgen.length === 0;
+
+        let kalenderFaehig = 0;
+        $('fristen').replaceChildren(
+          ...e.fristen.map((f, i) => {
+            const li = aussageElement(f.was, f.beleg, f.unsicher, f.datum);
+            if (f.datum_iso && fristBelegt(f.datum, f.beleg, gesendetText)) {
+              kalenderFaehig++;
+              const label = document.createElement('label');
+              label.className = 'kalender-wahl';
+              const cb = document.createElement('input');
+              cb.type = 'checkbox';
+              cb.dataset.frist = String(i);
+              label.append(cb, ' In den Kalender übernehmen');
+              li.append(label);
+            }
+            return li;
+          }),
+        );
+        $('block-fristen').hidden = e.fristen.length === 0;
+        $('kalender-bereich').hidden = kalenderFaehig === 0;
+
+        const begriffe = $('begriffe');
+        begriffe.replaceChildren(
+          ...e.begriffe.flatMap((b) => {
+            const dt = document.createElement('dt');
+            dt.textContent = b.wort;
+            const dd = document.createElement('dd');
+            dd.textContent = echt(b.erklaerung);
+            return [dt, dd];
+          }),
+        );
+        $('block-begriffe').hidden = e.begriffe.length === 0;
+
+        $('unsicher').textContent = echt(e.unsicher);
+        $('block-unsicher').hidden = !e.unsicher;
+
+        ergebnis.hidden = false;
+        zeigeFeedback();
+        $('schritt4').focus();
+      }
+
+      function liste(ol: HTMLElement, eintraege: string[]) {
+        ol.replaceChildren(
+          ...eintraege.map((t) => {
+            const li = document.createElement('li');
+            li.textContent = t;
+            return li;
+          }),
+        );
+      }
+
+      // Eine Aussage mit Beleg: Text, Stelle aus dem Brief mit Prüfstatus, Unsicherheit
+      function aussageElement(textInhalt: string, beleg: string, unsicher: string, datum = ''): HTMLLIElement {
+        const li = document.createElement('li');
+        li.className = 'aussage';
+        const haupt = document.createElement('p');
+        if (datum) {
+          const d = document.createElement('strong');
+          d.textContent = echt(datum);
+          haupt.append(d, ' ');
+        }
+        haupt.append(echt(textInhalt));
+        li.append(haupt);
+
+        const pruefung = pruefeBeleg(beleg, gesendetText);
+        const stelle = document.createElement('div');
+        stelle.className = `beleg ${pruefung.status}`;
+        const zeichen = { gefunden: '✓', aehnlich: '≈', nicht: '!', fehlt: '!' }[pruefung.status];
+        const titel = {
+          gefunden: 'Textstelle im Brief:',
+          aehnlich: 'Nicht wörtlich gefunden. Ähnliche Stelle im Brief, bitte vergleichen:',
+          nicht: 'Diese Textstelle wurde im Brief nicht gefunden. Bitte prüfen Sie die Aussage im Original.',
+          fehlt: 'Zu dieser Aussage gibt es keine Textstelle im Brief. Bitte prüfen Sie sie im Original.',
+        }[pruefung.status];
+        const kopf = document.createElement('span');
+        kopf.className = 'beleg-kopf';
+        kopf.textContent = `${zeichen} ${titel}`;
+        stelle.append(kopf);
+        if (beleg && pruefung.status !== 'aehnlich') stelle.append(zitat(echt(beleg)));
+        if (pruefung.status === 'aehnlich') {
+          stelle.append(zitat(echt(pruefung.stelle)));
+          const ki = document.createElement('span');
+          ki.className = 'leise';
+          ki.textContent = 'Die KI hat zitiert:';
+          stelle.append(ki, zitat(echt(beleg)));
+        }
+        li.append(stelle);
+
+        if (unsicher) {
+          const u = document.createElement('p');
+          u.className = 'aussage-unsicher';
+          u.textContent = `Unsicher: ${echt(unsicher)}`;
+          li.append(u);
+        }
+        return li;
+      }
+
+      function zitat(t: string) {
+        const q = document.createElement('q');
+        q.textContent = t;
+        return q;
+      }
+
+      $('kalender').addEventListener('click', () => {
+        if (!erklaerung) return;
+        const gewaehlt = [...document.querySelectorAll<HTMLInputElement>('#fristen input[data-frist]:checked')].map(
+          (cb) => erklaerung!.fristen[Number(cb.dataset.frist)],
+        );
+        if (gewaehlt.length === 0) {
+          meldung('Bitte kreuzen Sie zuerst an, welche Fristen in den Kalender sollen.', undefined, true);
+          return;
+        }
+        // Neutral: Kalender werden oft in die Cloud synchronisiert, deshalb keine Namen oder Inhalte
+        const ics = baueIcs(
+          gewaehlt.map((f) => ({
+            datumIso: f.datum_iso,
+            titel: 'Frist aus einem Brief',
+            beschreibung: 'Bitte im Brief nachsehen, was bis zu diesem Tag zu erledigen ist.',
+          })),
+        );
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+        a.download = 'fristen.ics';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      });
+
+      // --- Formulare ------------------------------------------------------------
+
+      let formularDatei: File | null = null;
+      let felder: Feld[] = [];
+
+      function setzeFormular(datei: File | null, neueFelder: Feld[]) {
+        formularDatei = datei;
+        felder = neueFelder;
+        const istFormular = felder.length > 0;
+        $('formular-hinweis').hidden = !istFormular;
+        $('ohne-ki').hidden = !istFormular;
+        $('formular-anzahl').textContent = istFormular ? `Dieses PDF ist ein Formular mit ${felder.length} Feldern.` : '';
+        // PDF mit Eingabefeldern: die Frage nach der Art erübrigt sich
+        $('art-wahl').hidden = istFormular || MODUS === 'demo'; // in der Demo legt das Beispiel die Art fest
+        aktualisiereKnopf();
+        if (text) zeichne(); // Vorschau „Das sieht die KI“ um die Feldangaben ergänzen
+        $('formular-ergebnis').hidden = true;
+        $('scan-ergebnis').hidden = true;
+      }
+
+      async function pruefeAufFormular(datei: File) {
+        try {
+          const gefunden = await liesFormular(await datei.arrayBuffer(), await lesePdfStuecke(datei));
+          setzeFormular(datei, gefunden);
+          if (gefunden.length) meldung(`Fertig. Das PDF ist ein Formular mit ${gefunden.length} Feldern.`);
+        } catch (err) {
+          // Kein lesbares Formular: dann eben als Brief behandeln
+          console.warn('Formular nicht lesbar', err instanceof Error ? err.name : err);
+          setzeFormular(null, []);
+        }
+      }
+
+      async function sendeFormular(zuSenden: string) {
+        // Beschriftungen und Hilfetexte stammen aus dem Dokument: bekannte Angaben auch dort ersetzen
+        const beschreibungen = feldBeschreibungen(zuordnung);
+        senden.disabled = true;
+        meldung('Das Formular wird erklärt. Bei vielen Feldern kann das 1 bis 3 Minuten dauern …');
+        try {
+          const daten = await frage('/api/formular', { text: zuSenden, felder: beschreibungen }, 'hilfe');
+          zeigeFormular(FormularHilfeSchema.parse(daten.hilfe));
+          meldung('Fertig. Füllen Sie das Formular unten aus.');
+        } catch (err) {
+          meldung(err instanceof Error ? err.message : 'Es ist ein Fehler aufgetreten.', undefined, true);
+        } finally {
+          senden.disabled = !einwilligung.checked;
+        }
+      }
+
+      // Alles, was zu den Feldern an die KI geht, läuft durch die Schwärzung: Name, Hilfetext, Beschriftung, Optionen
+      const feldBeschreibungen = (zuordnung: Map<string, string>) => geschwaerzteFelder(felder, zuordnung);
+
+      $('ohne-ki').addEventListener('click', () => zeigeFormular(null));
+
+      // --- Gescannte Papierformulare: erklären, Ausfüllen von Hand -----------------
+
+      async function sendeScan(zuSenden: string) {
+        if (zuSenden.length > MAX_ZEICHEN) {
+          meldung('Das Formular ist zu lang (mehr als etwa 40 Seiten).', undefined, true);
+          return;
+        }
+        senden.disabled = true;
+        ergebnis.hidden = true;
+        $('scan-ergebnis').hidden = true;
+        meldung('Das Formular wird erklärt. Das dauert meist 30 bis 90 Sekunden …');
+        try {
+          const daten = await frage('/api/formular', { art: 'scan', text: zuSenden }, 'scan');
+          zeigeScan(ScanHilfeSchema.parse(daten.scan));
+          meldung('Fertig. Unten steht, wie Sie das Formular ausfüllen.');
+        } catch (err) {
+          meldung(err instanceof Error ? err.message : 'Es ist ein Fehler aufgetreten.', undefined, true);
+        } finally {
+          senden.disabled = !einwilligung.checked;
+        }
+      }
+
+      const ART_ZEICHEN = { eintragen: '✎', ankreuzen: '☐', unterschreiben: '✍' } as const;
+      const ART_TEXT = { eintragen: 'Eintragen', ankreuzen: 'Ankreuzen', unterschreiben: 'Unterschreiben' } as const;
+
+      function zeigeScan(h: ScanHilfe) {
+        $('s-name').textContent = h.formular ? `Formular: ${echt(h.formular)}` : '';
+        $('s-worum').textContent = echt(h.worum);
+        liste($('s-vorbereitung'), h.vorbereitung.map(echt));
+        $('s-block-vorbereitung').hidden = h.vorbereitung.length === 0;
+        $('s-hinweise').textContent = echt(h.hinweise);
+        $('s-block-hinweise').hidden = !h.hinweise;
+        $('s-unsicher').textContent = echt(h.unsicher);
+        $('s-block-unsicher').hidden = !h.unsicher;
+
+        const ziel = $('s-felder');
+        ziel.replaceChildren();
+        let abschnitt: string | null = null;
+        let ol: HTMLOListElement | null = null;
+        let nummer = 0;
+        for (const f of h.felder) {
+          if (f.abschnitt !== abschnitt || !ol) {
+            abschnitt = f.abschnitt;
+            if (abschnitt) {
+              const h4 = document.createElement('h4');
+              h4.textContent = echt(abschnitt);
+              ziel.append(h4);
+            }
+            ol = document.createElement('ol');
+            ol.start = nummer + 1;
+            ziel.append(ol);
+          }
+          nummer++;
+          const li = document.createElement('li');
+          li.className = 'karte scan-feld';
+          const kopf = document.createElement('div');
+          kopf.className = 'feld-kopf';
+          const titel = document.createElement('span');
+          titel.className = 'feld-titel';
+          titel.textContent = `${nummer}. ${ART_ZEICHEN[f.art]} ${echt(f.bezeichnung)}`;
+          kopf.append(titel, abzeichen(ART_TEXT[f.art], 'art'));
+          if (f.pflicht === 'ja') kopf.append(abzeichen('Pflicht', 'pflicht'));
+          if (f.pflicht === 'nein') kopf.append(abzeichen('freiwillig', 'frei'));
+          if (f.schon_ausgefuellt) kopf.append(abzeichen('schon ausgefüllt', 'frei'));
+          li.append(kopf);
+          if (f.erklaerung) li.append(absatz(echt(f.erklaerung)));
+          if (f.wo_finden) li.append(absatz(echt(f.wo_finden), 'leise'));
+          ol.append(li);
+        }
+        $('scan-ergebnis').hidden = false;
+        zeigeFeedback();
+        $('schritt4s').focus();
+      }
+
+      $('s-drucken').addEventListener('click', () => {
+        document.body.classList.add('drucke-scan');
+        window.addEventListener('afterprint', () => document.body.classList.remove('drucke-scan'), { once: true });
+        window.print();
+      });
+
+      function zeigeFormular(hilfe: FormularHilfe | null) {
+        $('formular-ueberblick').hidden = !hilfe;
+        if (hilfe) {
+          $('f-name').textContent = hilfe.formular ? `Formular: ${echt(hilfe.formular)}` : '';
+          $('f-worum').textContent = echt(hilfe.worum);
+          liste($('f-vorbereitung'), hilfe.vorbereitung.map(echt));
+          $('f-block-vorbereitung').hidden = hilfe.vorbereitung.length === 0;
+          $('f-hinweise').textContent = echt(hilfe.hinweise);
+          $('f-block-hinweise').hidden = !hilfe.hinweise;
+          $('f-unsicher').textContent = echt(hilfe.unsicher);
+          $('f-block-unsicher').hidden = !hilfe.unsicher;
+        }
+        const zuId = new Map((hilfe?.felder ?? []).map((h) => [h.id, h]));
+        const formEl = $('felder');
+        // Vorhandene Eingaben behalten, wenn die Ansicht neu aufgebaut wird
+        const alt = leseWerte();
+        formEl.replaceChildren(...felder.map((f) => feldElement(f, zuId.get(f.id), alt[f.id])));
+        $('formular-ergebnis').hidden = false;
+        zeigeFeedback();
+        $('schritt4f').focus();
+      }
+
+      function feldElement(f: Feld, h: FeldHilfe | undefined, wert: string | boolean | undefined): HTMLElement {
+        const karte = document.createElement('div');
+        karte.className = 'karte feld-karte';
+        const inputId = `wert-${f.id}`;
+        const titel = (h?.bezeichnung && echt(h.bezeichnung)) || f.tooltip || f.beschriftung || f.name;
+
+        const kopf = document.createElement('div');
+        kopf.className = 'feld-kopf';
+        const label = document.createElement(f.typ === 'auswahl' && f.optionen.length <= 4 ? 'span' : 'label');
+        label.className = 'feld-titel';
+        label.textContent = titel;
+        if (label instanceof HTMLLabelElement) label.htmlFor = inputId;
+        kopf.append(label);
+        if (h?.pflicht === 'ja') kopf.append(abzeichen('Pflicht', 'pflicht'));
+        if (h?.pflicht === 'nein') kopf.append(abzeichen('freiwillig', 'frei'));
+        kopf.append(abzeichen(`Seite ${f.seite}`, 'seite'));
+        karte.append(kopf);
+
+        if (h?.erklaerung) karte.append(absatz(echt(h.erklaerung)));
+        if (h?.wo_finden) karte.append(absatz(echt(h.wo_finden), 'leise'));
+
+        karte.append(eingabe(f, inputId, titel, wert));
+        return karte;
+      }
+
+      function eingabe(f: Feld, id: string, titel: string, wert: string | boolean | undefined): HTMLElement {
+        if (f.typ === 'kaestchen') {
+          const wrap = document.createElement('label');
+          wrap.className = 'einwilligung';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.id = id;
+          cb.dataset.feld = f.id;
+          cb.checked = wert === true;
+          const span = document.createElement('span');
+          span.textContent = 'Ankreuzen';
+          wrap.append(cb, span);
+          return wrap;
+        }
+        if (f.typ === 'auswahl' && f.optionen.length <= 4) {
+          const gruppe = document.createElement('fieldset');
+          gruppe.className = 'optionen';
+          const legende = document.createElement('legend');
+          legende.className = 'sr-only';
+          legende.textContent = titel;
+          gruppe.append(legende);
+          for (const opt of f.optionen) {
+            const l = document.createElement('label');
+            const r = document.createElement('input');
+            r.type = 'radio';
+            r.name = id;
+            r.value = opt;
+            r.dataset.feld = f.id;
+            r.checked = wert === opt;
+            l.append(r, ` ${opt}`);
+            gruppe.append(l);
+          }
+          return gruppe;
+        }
+        if (f.typ === 'auswahl' || f.typ === 'liste') {
+          const s = document.createElement('select');
+          s.id = id;
+          s.dataset.feld = f.id;
+          s.append(new Option('Bitte wählen', ''), ...f.optionen.map((o) => new Option(o, o)));
+          if (typeof wert === 'string') s.value = wert;
+          return s;
+        }
+        const el = document.createElement(f.typ === 'mehrzeilig' ? 'textarea' : 'input');
+        el.id = id;
+        el.dataset.feld = f.id;
+        if (el instanceof HTMLInputElement) el.type = 'text';
+        if (f.maxLaenge) el.maxLength = f.maxLaenge;
+        el.autocomplete = 'off';
+        if (typeof wert === 'string') el.value = wert;
+        return el;
+      }
+
+      function leseWerte(): Werte {
+        const werte: Werte = {};
+        $('felder')
+          .querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('[data-feld]')
+          .forEach((el) => {
+            const id = el.dataset.feld!;
+            if (el instanceof HTMLInputElement && el.type === 'checkbox') werte[id] = el.checked;
+            else if (el instanceof HTMLInputElement && el.type === 'radio') {
+              if (el.checked) werte[id] = el.value;
+            } else werte[id] = el.value;
+          });
+        return werte;
+      }
+
+      $('pdf-laden').addEventListener('click', async () => {
+        if (!formularDatei) return;
+        try {
+          const pdf = await fuelleFormular(await formularDatei.arrayBuffer(), felder, leseWerte());
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+          a.download = formularDatei.name.replace(/\.pdf$/i, '') + '-ausgefuellt.pdf';
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+          meldung('Das ausgefüllte PDF wurde heruntergeladen.');
+        } catch (err) {
+          console.error(err);
+          meldung('Das PDF konnte nicht erstellt werden.', undefined, true);
+        }
+      });
+
+      function abzeichen(text: string, art: string) {
+        const s = document.createElement('span');
+        s.className = `abzeichen ${art}`;
+        s.textContent = text;
+        return s;
+      }
+
+      function absatz(text: string, klasse = '') {
+        const p = document.createElement('p');
+        p.textContent = text;
+        if (klasse) p.className = klasse;
+        return p;
+      }
+
+      $('text-uebernehmen').addEventListener('click', () => {
+        starte(($('eingabe') as HTMLTextAreaElement).value);
+      });
+
+      function bezeichnung(k: Fund['kategorie']): string {
+        const namen: Record<Fund['kategorie'], string> = {
+          IBAN: 'Kontonummer (IBAN)',
+          BIC: 'BIC',
+          STEUER_ID: 'Steuer-ID',
+          STEUERNUMMER: 'Steuernummer',
+          RV_NUMMER: 'Rentenversicherungsnummer',
+          KV_NUMMER: 'Versichertennummer',
+          AKTENZEICHEN: 'Aktenzeichen oder Kundennummer',
+          EMAIL: 'E-Mail',
+          TELEFON: 'Telefonnummer',
+          ADRESSE: 'Adresse',
+          PLZ_ORT: 'Postleitzahl und Ort',
+          GEBURTSDATUM: 'Geburtsdatum',
+          PERSON: 'Name',
+          MANUELL: 'Von Ihnen markiert',
+        };
+        return namen[k];
+      }
+    </script>
+  </body>
+</html>

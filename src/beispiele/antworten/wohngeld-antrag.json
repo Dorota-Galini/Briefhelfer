@@ -1,0 +1,98 @@
+{
+  "id": "wohngeld-antrag",
+  "erzeugt": "2026-10-18",
+  "modell": "claude-opus-5-5",
+  "gesendet": "Antrag auf Wohngeld (Mietzuschuss)\nBeispielformular des Briefhelfers. Kein echtes Formular einer Behörde.\n\n1. Angaben zur antragstellenden Person\n\nFamilienname, Vorname:\n\nGeburtsdatum:\n\nStraße, Hausnummer:\n\nPLZ, Ort:\n\n2. Wohnung\n\nWohnfläche in m²:\n\nBruttokaltmiete im Monat in EUR:\n\nWohnverhältnis:  Hauptmieter  Untermieter  Heimbewohner\n\n3. Haushalt und Einkommen\n\nAnzahl der Personen im Haushalt:\n\n  Ich oder ein Haushaltsmitglied beziehe Bürgergeld, Grundsicherung oder Sozialhilfe.\n\nMonatliches Bruttoeinkommen des Haushalts in EUR:\n\n4. Erklärung\nIch versichere, dass meine Angaben vollständig und richtig sind. Änderungen teile ich unverzüglich mit.\n\nOrt, Datum:\n\nUnterschrift: ________________________________",
+  "antwort": {
+    "formular": "Antrag auf Wohngeld (Mietzuschuss) – Beispielformular des Briefhelfers, kein echtes Behördenformular",
+    "worum": "Mit diesem Antrag bitten Sie um Wohngeld. Wohngeld ist ein Zuschuss zur Miete für Menschen mit wenig Einkommen. Ausfüllen muss es die Person, die die Wohnung mietet oder dort wohnt und den Zuschuss möchte.",
+    "vorbereitung": [
+      "Personalausweis oder Reisepass",
+      "Mietvertrag (für Wohnfläche und Miete)",
+      "Aktuelle Mietbescheinigung oder Nebenkostenabrechnung",
+      "Einkommensnachweise aller Haushaltsmitglieder (z. B. Lohnabrechnungen, Rentenbescheid)",
+      "Bescheide über Bürgergeld, Grundsicherung oder Sozialhilfe, falls vorhanden"
+    ],
+    "felder": [
+      {
+        "id": "F1",
+        "bezeichnung": "Name",
+        "erklaerung": "Schreiben Sie zuerst Ihren Familiennamen, dann Ihren Vornamen.",
+        "wo_finden": "Steht auf Ihrem Personalausweis.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F2",
+        "bezeichnung": "Geburtsdatum",
+        "erklaerung": "Ihr Geburtsdatum, zum Beispiel im Format TT.MM.JJJJ.",
+        "wo_finden": "Steht auf Ihrem Personalausweis.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F3",
+        "bezeichnung": "Straße und Hausnummer",
+        "erklaerung": "Die Adresse der Wohnung, für die Sie Wohngeld möchten.",
+        "wo_finden": "Steht im Mietvertrag oder auf Ihrem Personalausweis.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F4",
+        "bezeichnung": "Postleitzahl und Wohnort",
+        "erklaerung": "Die Postleitzahl und der Ort Ihrer Wohnung.",
+        "wo_finden": "",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F5",
+        "bezeichnung": "Größe der Wohnung",
+        "erklaerung": "Wie groß ist Ihre Wohnung in Quadratmetern? Schreiben Sie nur die Zahl.",
+        "wo_finden": "Steht meistens im Mietvertrag.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F6",
+        "bezeichnung": "Miete ohne Heizung",
+        "erklaerung": "Die Miete pro Monat in Euro mit den Nebenkosten, aber ohne Kosten für Heizung und Warmwasser.",
+        "wo_finden": "Steht im Mietvertrag oder in der letzten Mieterhöhung bzw. Nebenkostenabrechnung. Fragen Sie sonst Ihren Vermieter.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F7",
+        "bezeichnung": "Art des Wohnens",
+        "erklaerung": "Wählen Sie eins: Hauptmieter = Sie haben den Mietvertrag direkt mit dem Vermieter. Untermieter = Sie mieten von einer anderen Mieterin oder einem anderen Mieter. Heimbewohner = Sie wohnen in einem Heim.",
+        "wo_finden": "Sehen Sie in Ihren Mietvertrag: Wer ist dort als Vermieter genannt?",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F8",
+        "bezeichnung": "Personen im Haushalt",
+        "erklaerung": "Wie viele Menschen wohnen mit Ihnen zusammen und wirtschaften gemeinsam? Zählen Sie sich selbst mit.",
+        "wo_finden": "",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F9",
+        "bezeichnung": "Bezug von Bürgergeld, Grundsicherung oder Sozialhilfe",
+        "erklaerung": "Kreuzen Sie an, wenn Sie oder jemand in Ihrem Haushalt Bürgergeld, Grundsicherung oder Sozialhilfe bekommt. Wenn das nicht so ist, lassen Sie das Kästchen leer.",
+        "wo_finden": "Steht in Ihrem Bescheid vom Jobcenter oder Sozialamt.",
+        "pflicht": "nein"
+      },
+      {
+        "id": "F10",
+        "bezeichnung": "Einkommen des Haushalts pro Monat",
+        "erklaerung": "Das gesamte Einkommen aller Personen im Haushalt pro Monat in Euro, vor Abzug von Steuern und Sozialabgaben (brutto).",
+        "wo_finden": "Steht auf den Lohnabrechnungen, Rentenbescheiden oder anderen Einkommensnachweisen.",
+        "pflicht": "ja"
+      },
+      {
+        "id": "F11",
+        "bezeichnung": "Ort und Datum",
+        "erklaerung": "Der Ort, an dem Sie unterschreiben, und das heutige Datum.",
+        "wo_finden": "",
+        "pflicht": "ja"
+      }
+    ],
+    "hinweise": "Unterschreiben Sie den Antrag am Ende von Hand. Mit der Unterschrift bestätigen Sie, dass alle Angaben richtig und vollständig sind. Wenn sich später etwas ändert (z. B. Einkommen, Miete, Personen im Haushalt), müssen Sie das sofort melden. Legen Sie Kopien der Nachweise bei. Gut zu wissen: Wer Bürgergeld, Grundsicherung oder Sozialhilfe bekommt, erhält oft kein Wohngeld, weil die Miete dort schon berücksichtigt wird. Fragen Sie im Zweifel bei der Wohngeldstelle nach. Dies ist ein Beispielformular, kein echter Antrag.",
+    "unsicher": "Feld F9 (Kästchen) hat automatisch die Beschriftung 'Anzahl der Personen im Haushalt' bekommen. Nach dem technischen Namen und dem Formulartext gehört es aber sehr wahrscheinlich zur Frage nach Bürgergeld, Grundsicherung oder Sozialhilfe. Für die Unterschrift gibt es kein Eingabefeld; sie muss von Hand erfolgen."
+  }
+}

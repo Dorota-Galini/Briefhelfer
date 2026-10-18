@@ -1,0 +1,78 @@
+{
+  "id": "jobcenter-mitwirkung",
+  "erzeugt": "2026-10-18",
+  "modell": "claude-opus-5-5",
+  "gesendet": "Jobcenter Musterkreis\n  Am Markt 5\n  [PLZ_ORT_1]\n  Telefon [AKTENZEICHEN_1]\n\nJobcenter Musterkreis · Postfach 1234 · [PLZ_ORT_1]\nHerrn\n[PERSON_1]\n[ADRESSE_1]\n[PLZ_ORT_2]\n\n  BG-Nummer: [AKTENZEICHEN_2]\n  Ihr Zeichen: –\n  14.10.2026\n\nAufforderung zur Mitwirkung\n\nSehr geehrter Herr [PERSON_1_NACHNAME],\nIhr Antrag auf Bürgergeld vom 02.09.2026 ist noch unvollständig. Für die Prüfung Ihres Anspruchs\nbenötige ich folgende Unterlagen:\n- Kontoauszüge aller Ihrer Konten der letzten drei Monate\n- die ausgefüllte Mietbescheinigung (Vordruck liegt bei)\nBitte reichen Sie die Unterlagen bis zum 30.10.2026 ein. Sie können sie persönlich abgeben, per\nPost schicken oder über jobcenter.digital hochladen.\nKommen Sie Ihrer Mitwirkungspflicht nach §§ 60 ff. SGB I bis zu diesem Tag nicht nach, können\ndie Leistungen nach § 66 SGB I bis zur Nachholung der Mitwirkung ganz oder teilweise versagt\nwerden.\n\nMit freundlichen Grüßen\nIm Auftrag\n[PERSON_2]",
+  "antwort": {
+    "absender": "Jobcenter Musterkreis",
+    "worum": "Das Jobcenter schreibt Ihnen wegen Ihres Antrags auf Bürgergeld vom 02.09.2026. Laut Brief ist der Antrag noch nicht vollständig. Das Jobcenter möchte noch Unterlagen von Ihnen, damit es den Antrag prüfen kann.",
+    "forderungen": [
+      {
+        "text": "Das Jobcenter verlangt Kontoauszüge von allen Ihren Konten aus den letzten drei Monaten.",
+        "beleg": "- Kontoauszüge aller Ihrer Konten der letzten drei Monate",
+        "unsicher": ""
+      },
+      {
+        "text": "Das Jobcenter verlangt die ausgefüllte Mietbescheinigung. Laut Brief liegt der Vordruck (das Formular) dem Brief bei.",
+        "beleg": "- die ausgefüllte Mietbescheinigung (Vordruck liegt bei)",
+        "unsicher": ""
+      },
+      {
+        "text": "Laut Brief können Sie die Unterlagen persönlich abgeben, per Post schicken oder über jobcenter.digital hochladen.",
+        "beleg": "Sie können sie persönlich abgeben, per\nPost schicken oder über jobcenter.digital hochladen.",
+        "unsicher": ""
+      }
+    ],
+    "fristen": [
+      {
+        "datum": "30.10.2026",
+        "datum_iso": "2026-10-30",
+        "was": "Bis zu diesem Tag sollen die Kontoauszüge und die Mietbescheinigung beim Jobcenter sein.",
+        "beleg": "Bitte reichen Sie die Unterlagen bis zum 30.10.2026 ein.",
+        "unsicher": ""
+      }
+    ],
+    "folgen": [
+      {
+        "text": "Laut Brief kann das Jobcenter das Bürgergeld ganz oder teilweise verweigern, wenn die Unterlagen bis zum 30.10.2026 nicht da sind. Das gilt so lange, bis Sie die Unterlagen nachreichen.",
+        "beleg": "Kommen Sie Ihrer Mitwirkungspflicht nach §§ 60 ff. SGB I bis zu diesem Tag nicht nach, können\ndie Leistungen nach § 66 SGB I bis zur Nachholung der Mitwirkung ganz oder teilweise versagt\nwerden.",
+        "unsicher": ""
+      }
+    ],
+    "begriffe": [
+      {
+        "wort": "Bürgergeld",
+        "erklaerung": "Geld vom Staat für Menschen, die ihren Lebensunterhalt nicht selbst bezahlen können."
+      },
+      {
+        "wort": "Mitwirkung / Mitwirkungspflicht",
+        "erklaerung": "Ihre Pflicht, dem Amt die nötigen Angaben und Unterlagen zu geben, damit es Ihren Antrag prüfen kann."
+      },
+      {
+        "wort": "BG-Nummer",
+        "erklaerung": "Nummer Ihrer Bedarfsgemeinschaft. Das ist Ihr Haushalt beim Jobcenter. Geben Sie diese Nummer bei Kontakt mit dem Jobcenter an."
+      },
+      {
+        "wort": "Mietbescheinigung",
+        "erklaerung": "Formular, auf dem Ihr Vermieter Angaben zu Ihrer Wohnung und Miete macht."
+      },
+      {
+        "wort": "Vordruck",
+        "erklaerung": "Ein fertiges Formular zum Ausfüllen."
+      },
+      {
+        "wort": "versagt",
+        "erklaerung": "Verweigert. Das Geld wird nicht oder nur teilweise gezahlt."
+      },
+      {
+        "wort": "SGB I",
+        "erklaerung": "Sozialgesetzbuch, Erstes Buch. Ein Gesetz mit allgemeinen Regeln für Sozialleistungen."
+      },
+      {
+        "wort": "Im Auftrag",
+        "erklaerung": "Eine Mitarbeiterin oder ein Mitarbeiter unterschreibt für das Jobcenter."
+      }
+    ],
+    "unsicher": "Die Mietbescheinigung soll laut Brief beiliegen. Sie ist hier aber nicht mitgeschickt. Bitte prüfen Sie, ob das Formular im Umschlag war. Bei der Telefonnummer steht ein Platzhalter; die Nummer finden Sie im Originalbrief."
+  }
+}

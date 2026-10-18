@@ -1,0 +1,44 @@
+---
+// Impressum nach § 5 DDG. Angaben aus src/config.ts, übernommen von galini-studio.de.
+import Recht from '../layouts/Recht.astro';
+import { adresse, kontakt, marke, MODUS, steuer } from '../config';
+---
+<Recht titel="Impressum">
+  {MODUS === 'voll' && (
+    <p class="hinweis">
+      Wer den Briefhelfer selbst betreibt, braucht ein eigenes Impressum. Die Angaben unten gehören zur Demo von
+      {marke.name} und gelten nicht für fremde Installationen.
+    </p>
+  )}
+
+  <p>
+    {marke.inhaberin}<br />
+    {marke.name}<br />
+    {adresse.strasse}<br />
+    {adresse.plz} {adresse.ort}
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>
+    Telefon: <a href={`tel:${kontakt.telefonLink}`}>{kontakt.telefonAnzeige}</a><br />
+    E-Mail: <a href={`mailto:${kontakt.mail}`}>{kontakt.mail}</a>
+  </p>
+
+  <h2>Umsatzsteuer</h2>
+  <p>Umsatzsteuer-Identifikationsnummer nach § 27a UStG: {steuer.ustIdNr}</p>
+  <p>Als Kleinunternehmerin im Sinne von § 19 Abs. 1 UStG berechne ich keine Umsatzsteuer.</p>
+
+  <h2>Über den Briefhelfer</h2>
+  <p>
+    Der Briefhelfer ist ein kostenloses Projekt von {marke.name}. Er erklärt Briefe und Formulare in einfachem Deutsch
+    und ersetzt keine Rechts-, Steuer- oder Sozialberatung. Für Entscheidungen im Einzelfall wenden Sie sich bitte an
+    eine Beratungsstelle, die Verbraucherzentrale oder eine Anwältin.
+  </p>
+  <p>
+    Die Erklärungen in der Demo hat Claude erzeugt, ein KI-Modell von Anthropic. Alle Beispielbriefe, Formulare, Namen
+    und Nummern sind erfunden.
+  </p>
+
+  <h2>Verbraucher&shy;streit&shy;beilegung/Universal&shy;schlichtungs&shy;stelle</h2>
+  <p>Ich bin nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+</Recht>

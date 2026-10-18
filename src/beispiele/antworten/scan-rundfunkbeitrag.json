@@ -1,0 +1,111 @@
+{
+  "id": "scan-rundfunkbeitrag",
+  "erzeugt": "2026-10-18",
+  "modell": "claude-opus-5-5",
+  "gesendet": "Antrag auf Befreiung vom Rundfunkbeitrag\n\nBeispielformular des Briefhelfers — kein echtes Formular. Bitte vollständig ausfüllen und Zutreffendes ankreuzen.\n\nFrau\n\n[PERSON_1]\n\n[ADRESSE_1]\n\n[PLZ_ORT_1]\n\nBeitragsnummer: [AKTENZEICHEN_1] - Telefon für Rückfragen: [TELEFON_1]\n\n1. Angaben zur antragstellenden Person\n\nFamilienname: [PERSON_1_NACHNAME]\n\nVorname: [PERSON_1_VORNAME]\n\nGeburtsdatum: EN\nBeitragsnummer: [AKTENZEICHEN_1]\n\n2. Grund der Befreiung\n\n☒ Bürgergeld | Grundsicherung im Alter HJ BAföG 9 Sonstiges\n\nBewilligt bis (Datum): EN\n3. Weitere Personen in der Wohnung\n\n☐ Ich wohne allein DL] Mit Ehe- oder Lebenspartner\n\nName der Partnerin / des N\nPartners:\n\n4. Nachweis\n\nBitte legen Sie eine Kopie Ihres aktuellen Bescheids bei. Ohne Nachweis kann der Antrag\nnicht bearbeitet werden.\n\nOrt, Datum Unterschrift",
+  "antwort": {
+    "formular": "Antrag auf Befreiung vom Rundfunkbeitrag (Beispielformular des Briefhelfers, kein echtes Formular)",
+    "worum": "Mit diesem Antrag bitten Sie darum, keinen Rundfunkbeitrag mehr zahlen zu müssen. Das ist möglich, wenn Sie bestimmte Sozialleistungen bekommen, zum Beispiel Bürgergeld, Grundsicherung im Alter oder BAföG. Die Person, die den Beitrag zahlt, füllt den Antrag aus.",
+    "vorbereitung": [
+      "Ihre Beitragsnummer (steht schon auf dem Formular und auf Briefen vom Beitragsservice)",
+      "Ihr Personalausweis für das Geburtsdatum",
+      "Ihr aktueller Bescheid über die Sozialleistung, zum Beispiel Bürgergeld oder BAföG",
+      "Eine Kopie dieses Bescheids zum Mitschicken",
+      "Wenn Sie mit Partner oder Partnerin wohnen: den vollständigen Namen dieser Person"
+    ],
+    "felder": [
+      {
+        "abschnitt": "1. Angaben zur antragstellenden Person",
+        "bezeichnung": "Familienname",
+        "art": "eintragen",
+        "erklaerung": "Ihr Nachname. Hier steht schon [PERSON_1_NACHNAME]. Prüfen Sie, ob er richtig ist.",
+        "wo_finden": "",
+        "pflicht": "ja",
+        "schon_ausgefuellt": true
+      },
+      {
+        "abschnitt": "1. Angaben zur antragstellenden Person",
+        "bezeichnung": "Vorname",
+        "art": "eintragen",
+        "erklaerung": "Ihr Vorname. Hier steht schon [PERSON_1_VORNAME]. Prüfen Sie, ob er richtig ist.",
+        "wo_finden": "",
+        "pflicht": "ja",
+        "schon_ausgefuellt": true
+      },
+      {
+        "abschnitt": "1. Angaben zur antragstellenden Person",
+        "bezeichnung": "Geburtsdatum",
+        "art": "eintragen",
+        "erklaerung": "Tragen Sie Ihr Geburtsdatum ein: Tag, Monat, Jahr.",
+        "wo_finden": "Personalausweis oder Reisepass",
+        "pflicht": "ja",
+        "schon_ausgefuellt": false
+      },
+      {
+        "abschnitt": "1. Angaben zur antragstellenden Person",
+        "bezeichnung": "Beitragsnummer",
+        "art": "eintragen",
+        "erklaerung": "Ihre Nummer beim Beitragsservice. Hier steht schon [AKTENZEICHEN_1]. Prüfen Sie, ob sie stimmt.",
+        "wo_finden": "Briefe vom Beitragsservice oder Ihr Kontoauszug bei der Abbuchung",
+        "pflicht": "ja",
+        "schon_ausgefuellt": true
+      },
+      {
+        "abschnitt": "2. Grund der Befreiung",
+        "bezeichnung": "Grund der Befreiung",
+        "art": "ankreuzen",
+        "erklaerung": "Kreuzen Sie an, welche Leistung Sie bekommen: Bürgergeld, Grundsicherung im Alter, BAföG oder Sonstiges. Laut Text ist Bürgergeld schon angekreuzt. Prüfen Sie, ob das stimmt.",
+        "wo_finden": "Ihr Bescheid vom Jobcenter, Sozialamt oder BAföG-Amt",
+        "pflicht": "ja",
+        "schon_ausgefuellt": true
+      },
+      {
+        "abschnitt": "2. Grund der Befreiung",
+        "bezeichnung": "Bewilligt bis (Datum)",
+        "art": "eintragen",
+        "erklaerung": "Tragen Sie ein, bis zu welchem Datum Sie die Leistung bekommen.",
+        "wo_finden": "Ihr Bescheid, dort steht der Bewilligungszeitraum (zum Beispiel 'vom ... bis ...')",
+        "pflicht": "ja",
+        "schon_ausgefuellt": false
+      },
+      {
+        "abschnitt": "3. Weitere Personen in der Wohnung",
+        "bezeichnung": "Wohnsituation",
+        "art": "ankreuzen",
+        "erklaerung": "Kreuzen Sie an: 'Ich wohne allein' oder 'Mit Ehe- oder Lebenspartner'. Nur eine Möglichkeit wählen.",
+        "wo_finden": "",
+        "pflicht": "ja",
+        "schon_ausgefuellt": false
+      },
+      {
+        "abschnitt": "3. Weitere Personen in der Wohnung",
+        "bezeichnung": "Name der Partnerin / des Partners",
+        "art": "eintragen",
+        "erklaerung": "Nur ausfüllen, wenn Sie mit Ehe- oder Lebenspartner wohnen. Tragen Sie Vor- und Nachnamen dieser Person ein.",
+        "wo_finden": "",
+        "pflicht": "nein",
+        "schon_ausgefuellt": false
+      },
+      {
+        "abschnitt": "",
+        "bezeichnung": "Ort, Datum",
+        "art": "eintragen",
+        "erklaerung": "Schreiben Sie Ihren Wohnort und das heutige Datum.",
+        "wo_finden": "",
+        "pflicht": "ja",
+        "schon_ausgefuellt": false
+      },
+      {
+        "abschnitt": "",
+        "bezeichnung": "Unterschrift",
+        "art": "unterschreiben",
+        "erklaerung": "Unterschreiben Sie hier selbst mit Ihrem Namen.",
+        "wo_finden": "",
+        "pflicht": "ja",
+        "schon_ausgefuellt": false
+      }
+    ],
+    "hinweise": "Schreiben Sie mit Kugelschreiber und in Druckbuchstaben. Legen Sie unbedingt eine Kopie Ihres aktuellen Bescheids bei, zum Beispiel vom Jobcenter. Ohne diesen Nachweis wird der Antrag nicht bearbeitet. Schicken Sie keine Originale, nur Kopien. Vergessen Sie die Unterschrift nicht. Wohin der Antrag geschickt wird, steht nicht im Text. Schauen Sie dazu auf das Original oder auf Briefe vom Beitragsservice.",
+    "unsicher": "Bei Abschnitt 2 ist das Kreuz vor der ganzen Zeile erkannt worden. Wahrscheinlich ist 'Bürgergeld' angekreuzt. Prüfen Sie im Original, welches Kästchen wirklich angekreuzt ist. Die Zeichen 'HJ', '9' und 'DL]' sind vermutlich Kästchen, die schlecht gelesen wurden. Bei 'Mit Ehe- oder Lebenspartner' ist unklar, ob das Kästchen leer ist. Bei 'Geburtsdatum' und 'Bewilligt bis' steht 'EN'. Das ist wahrscheinlich ein Lesefehler und das Feld ist leer."
+  }
+}

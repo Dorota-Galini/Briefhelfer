@@ -1,0 +1,93 @@
+---
+// Werkstatt: erzeugt die vorab gespeicherten KI-Antworten für die Demo.
+// Funktioniert nur in der Entwicklung (npm run dev) mit eigenem API-Schlüssel in .env.
+// Verarbeitet jedes Beispiel genau wie die Startseite, damit der gesendete Text identisch ist.
+import '../styles/global.css';
+import { BEISPIELE } from '../beispiele';
+const entwicklung = import.meta.env.DEV;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Werkstatt · Briefhelfer</title>
+  </head>
+  <body>
+    <main>
+      <h1>Werkstatt</h1>
+      {entwicklung ? (
+        <>
+          <p>
+            Erzeugt die Antworten für die Demo-Beispiele mit der echten KI und speichert sie unter
+            <code>src/beispiele/antworten/</code>. Kostet pro Beispiel ein paar Cent.
+          </p>
+          <ul id="liste">
+            {BEISPIELE.map((b) => (
+              <li>
+                <label><input type="checkbox" value={b.id} checked /> {b.titel} ({b.art})</label>
+                <span class="leise" data-status={b.id}></span>
+              </li>
+            ))}
+          </ul>
+          <button id="los" type="button">Ausgewählte erzeugen</button>
+        </>
+      ) : (
+        <p>Diese Seite gibt es nur in der Entwicklung.</p>
+      )}
+    </main>
+
+    <script>
+      import { BEISPIELE } from '../beispiele';
+      import { leseDatei, lesePdfStuecke } from '../lib/extract';
+      import { vorbereiten } from '../lib/ablauf';
+      import { findePersonendaten, kompakt, pseudonymisiere } from '../lib/pseudonymize';
+      import { liesFormular } from '../lib/formular';
+      import { geschwaerzteFelder } from '../lib/formularhilfe';
+
+      const los = document.getElementById('los');
+      const status = (id: string, t: string) => {
+        const el = document.querySelector(`[data-status="${id}"]`);
+        if (el) el.textContent = ` – ${t}`;
+      };
+
+      async function post(url: string, body: unknown) {
+        const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+        const d = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(d.fehler ?? `HTTP ${r.status}`);
+        return d;
+      }
+
+      los?.addEventListener('click', async () => {
+        const gewaehlt = [...document.querySelectorAll<HTMLInputElement>('#liste input:checked')].map((i) => i.value);
+        for (const b of BEISPIELE.filter((x) => gewaehlt.includes(x.id))) {
+          try {
+            status(b.id, 'wird gelesen …');
+            const blob = await (await fetch(b.datei)).blob();
+            const datei = new File([blob], b.datei.split('/').pop()!, { type: blob.type });
+            // Genau wie auf der Startseite: lesen, vorbereiten, alle erkannten Stellen schwärzen, kompakt
+            const text = vorbereiten(await leseDatei(datei, () => {}));
+            const p = pseudonymisiere(text, findePersonendaten(text));
+            const gesendet = kompakt(p.text);
+
+            status(b.id, 'KI arbeitet …');
+            let inhalt: unknown;
+            if (b.art === 'formular') {
+              const felder = await liesFormular(await datei.arrayBuffer(), await lesePdfStuecke(datei));
+              inhalt = (await post('/api/formular', { text: gesendet, felder: geschwaerzteFelder(felder, p.zuordnung) })).hilfe;
+            } else if (b.art === 'scan') {
+              inhalt = (await post('/api/formular', { art: 'scan', text: gesendet })).scan;
+            } else {
+              inhalt = (await post('/api/erklaeren', { text: gesendet })).erklaerung;
+            }
+            const s = await post('/api/beispiel-speichern', { id: b.id, gesendet, antwort: inhalt });
+            status(b.id, `gespeichert: ${s.gespeichert}`);
+          } catch (e) {
+            status(b.id, `Fehler: ${e instanceof Error ? e.message : e}`);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

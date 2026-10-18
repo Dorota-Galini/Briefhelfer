@@ -1,0 +1,29 @@
+# Netlify baut die öffentliche Demo (nur Beispielbriefe, keine KI-Aufrufe, kein Server nötig).
+# Ein API-Schlüssel wird hier NICHT gebraucht und darf auch nicht als Umgebungsvariable eingetragen werden.
+
+[build]
+  command = "npm run build:demo"
+  publish = "dist/client"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Die Werkstatt gibt es nur in der Entwicklung
+[[redirects]]
+  from = "/werkstatt/*"
+  to = "/"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    X-Frame-Options = "DENY"
+
+# Tesseract-Dateien ändern sich nur mit neuer Version: lange zwischenspeichern
+[[headers]]
+  for = "/tesseract/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
